@@ -78,7 +78,6 @@ def p_start(t):
     t[0] = ('start',t[1])
     print(t[0])
     printTreeGraph(t[0])
-    #eval(t[1])
     evalInst(t[1])
 names={}
 
@@ -113,10 +112,10 @@ def evalInst(t):
             evalInst(t[2])
     
     if t[0]=='for':
-        evalInst(t[1]) # assign
-        while evalExpr(t[2]): # condition
-            evalInst(t[3]) # linst
-            evalInst(t[4]) # increment
+        evalInst(t[1])          # assign
+        while evalExpr(t[2]):   # condition
+            evalInst(t[3])      # linst
+            evalInst(t[4])      # increment
             
     
 def evalExpr(t):
@@ -131,15 +130,7 @@ def evalExpr(t):
             return None
         
     elif type(t)==tuple:
-        if t[0]=='+':
-            return evalExpr(t[1]) + evalExpr(t[2]) 
-        if t[0]=='-':
-            return evalExpr(t[1]) - evalExpr(t[2]) 
-        if t[0]=='*':
-            return evalExpr(t[1]) * evalExpr(t[2]) 
-        if t[0]=='/':
-            return evalExpr(t[1]) / evalExpr(t[2]) 
-        elif t[0] == '==':
+        if t[0] == '==':
             return evalExpr(t[1]) == evalExpr(t[2])
         elif t[0] == '<':
             return evalExpr(t[1]) < evalExpr(t[2])
@@ -229,24 +220,24 @@ def p_expression_condition(t):
 
 ############################ OPERATIONS ###################################
 
-def p_expression_binop_plus(p):
+def p_expression_binop_plus(t):
     'expression : expression PLUS expression'
-    p[0] = p[1] + p[3]
+    t[0] = t[1] + t[3]
 
 
-def p_expression_binop_times(p):
+def p_expression_binop_times(t):
     'expression : expression TIMES expression'
-    p[0] = p[1] * p[3]
+    t[0] = t[1] * t[3]
 
 
-def p_expression_binop_divide(p):
+def p_expression_binop_divide(t):
     'expression : expression DIVIDE expression'
-    p[0] = p[1] / p[3]
+    t[0] = t[1] / t[3]
 
 
-def p_expression_binop_minus(p):
+def p_expression_binop_minus(t):
     'expression : expression MINUS expression'
-    p[0] = p[1] - p[3]
+    t[0] = t[1] - t[3]
     
     
 ############################ FONCTIONS ###################################
@@ -282,6 +273,6 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'a=3+3; while(a+1 < 10){print(a); a++;}'
+s = 'a=3+3; while(a < 10){print(a); a++;}'
    
 parser.parse(s)
