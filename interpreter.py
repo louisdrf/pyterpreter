@@ -5,13 +5,14 @@ reserved = {
    'then'  : 'THEN',
    'print' : 'PRINT',
    'while' : 'WHILE',
-   'for'   : 'FOR'
+   'for'   : 'FOR',
+   'function'   : 'FUNCTION'
 }
 
 tokens = [
     'NAME','NUMBER',
     'PLUS','MINUS','TIMES','DIVIDE', 
-    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON',
+    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA',
     'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER'
     ] + list(reserved.values())
 
@@ -31,6 +32,7 @@ t_RPAREN  = r'\)'
 t_LBRACKET = r'\{'
 t_RBRACKET = r'\}'
 t_COLON   = r';'
+t_COMMA   = r','
 t_AND     = r'\&'
 t_OR      = r'\|'
 t_EQUALS  = r'=='
@@ -79,7 +81,10 @@ def p_start(t):
     print(t[0])
     printTreeGraph(t[0])
     evalInst(t[1])
+    
 names={}
+functions={}
+
 
 def evalInst(t):
     print('evalInst', t)
@@ -117,6 +122,13 @@ def evalInst(t):
             evalInst(t[3])      # linst
             evalInst(t[4])      # increment
             
+    if t[0]=='function':
+        functions[t[1]] = t[2]
+            
+    if t[0]=='call':
+        evalInst(functions[t[1]])    # appeler functions[fonction appelée]
+        
+            
     
 def evalExpr(t):
     print('evalExpr', t)
@@ -124,7 +136,7 @@ def evalExpr(t):
         return t  
     elif type(t) == str:
         if t in names:
-            return names[t]  
+            return names[t]
         else:
             print(f"Error: Variable '{t}' not found")
             return None
@@ -199,7 +211,8 @@ def p_statement_while(t):
     t[0] = ('while', t[3], t[5])
     
 def p_statement_for(t):
-    'inst : FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc'
+    '''inst : FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc
+    | FOR LPAREN assign COLON condition COLON add_assign RPAREN b_bloc'''
     t[0] = ('for', t[3], t[5], t[7], t[9])
       
 ########################## CONDITIONS #####################################
@@ -224,7 +237,6 @@ def p_expression_binop_plus(t):
     'expression : expression PLUS expression'
     t[0] = t[1] + t[3]
 
-
 def p_expression_binop_times(t):
     'expression : expression TIMES expression'
     t[0] = t[1] * t[3]
@@ -245,6 +257,26 @@ def p_expression_binop_minus(t):
 def p_statement_print(t):
     'inst : PRINT LPAREN expression RPAREN COLON'
     t[0] = ('print',t[3])
+    
+# déclarer une fonction void et l'ajouter au dictionnaire
+def p_statement_function_void(t):                
+    'inst : FUNCTION NAME LPAREN RPAREN b_bloc'
+    t[0] = ('function', t[2], t[5])
+    
+# appeler une fonction void   
+def p_statement_call_function_void(t):
+    'inst : NAME LPAREN RPAREN COLON'
+    t[0] = ('call', t[1])
+    
+    
+#def p_expression_function_args(t):
+#    '''args : NAME COMMA args
+#            | NAME'''
+#    if len(t) > 2:
+#        t[0] = t[1] + [t[3]]
+#    else:
+#        t[0] = [t[1]]
+        
    
 ############################ EXPRESSIONS ###################################
 
@@ -273,6 +305,6 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'a=3+3; while(a < 10){print(a); a++;}'
+s = 'function test(){print(1);} for(a = 0; a < 3; a++){test();}'
    
 parser.parse(s)
