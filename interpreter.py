@@ -213,13 +213,8 @@ def p_statement_for(t):
       
 ########################## CONDITIONS #####################################
 
-def p_statement_if(t):
-    'inst : if'
-    t[0] = t[1]
-
-
 def p_expression_if(t):
-    'if : IF LPAREN condition RPAREN b_bloc'
+    'inst : IF LPAREN condition RPAREN b_bloc'
     t[0] = ('if', t[3], t[5])
     
     
