@@ -1,12 +1,13 @@
 from genereTreeGraphviz2 import printTreeGraph
              
 reserved = {
-   'if'    : 'IF',
-   'then'  : 'THEN',
-   'print' : 'PRINT',
-   'while' : 'WHILE',
-   'for'   : 'FOR',
-   'function'   : 'FUNCTION'
+   'if'      : 'IF',
+   'then'    : 'THEN',
+   'print'   : 'PRINT',
+   'while'   : 'WHILE',
+   'for'     : 'FOR',
+   'function': 'FUNCTION',
+   'return'  : 'RETURN'
 }
 
 tokens = [
@@ -105,9 +106,19 @@ def evalInst(t):
     if t[0]=='increment':
         names[t[1]] += 1
         
-    if t[0]=='add_assign':
-        names[t[1]] += evalExpr(t[2])
+    if t[0]=='decrement':
+        names[t[1]] -= 1
         
+    if t[0]=='operator_assign':
+        if t[2]=='+':
+            names[t[1]] += evalExpr(t[3])
+        elif t[2]=='-':
+            names[t[1]] -= evalExpr(t[3])
+        elif t[2]=='/':
+            names[t[1]] /= evalExpr(t[3])
+        elif t[2]=='*':
+            names[t[1]] *= evalExpr(t[3])
+            
     if t[0]=='if' : 
         if evalExpr(t[1]):
             evalInst(t[2])
@@ -172,22 +183,27 @@ def p_line(t):
 ############################ INCREMENTATIONS ###################################
 
 # statements 
-def p_statement_increment(t):
-    'inst : increment COLON'
+def p_statement_increment_decrement(t):
+    '''inst : increment COLON
+            | decrement COLON'''
     t[0] = t[1]
 
 def p_statement_add_assign(t):
-    'inst : add_assign COLON'
+    'inst : operator_assign COLON'
     t[0] = t[1]   
 
 # expressions   
 def p_expression_increment(t):
     'increment : NAME PLUS PLUS'
     t[0] = ('increment', t[1])
+    
+def p_expression_decrement(t):
+    'decrement : NAME MINUS MINUS'
+    t[0] = ('decrement', t[1])
  
-def p_expression_add_assign(t):
-    'add_assign : NAME PLUS EQUAL expression'
-    t[0] = ('add_assign', t[1], t[4])
+def p_expression_operator_assign(t):
+    'operator_assign : NAME operator EQUAL expression'
+    t[0] = ('operator_assign', t[1], t[2], t[4])
     
     
 ############################ ASSIGN ###################################
@@ -212,7 +228,8 @@ def p_statement_while(t):
     
 def p_statement_for(t):
     '''inst : FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc
-    | FOR LPAREN assign COLON condition COLON add_assign RPAREN b_bloc'''
+    | FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc
+    | FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc'''
     t[0] = ('for', t[3], t[5], t[7], t[9])
       
 ########################## CONDITIONS #####################################
@@ -283,6 +300,13 @@ def p_statement_call_function_void(t):
 def p_expression_bracket_bloc(t):
     'b_bloc : LBRACKET linst RBRACKET'
     t[0] = t[2]
+    
+def p_expression_operator(t):
+    '''operator : PLUS
+                | MINUS
+                | DIVIDE
+                | TIMES'''
+    t[0] = t[1]
 
 def p_expression_group(t):
     'expression : LPAREN expression RPAREN'
@@ -305,6 +329,6 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'function test(){print(1);} for(a = 0; a < 3; a++){test();}'
+s = 'function test(){print(1);} for(a = 4; a > 0; a-=1){test();}'
    
 parser.parse(s)
