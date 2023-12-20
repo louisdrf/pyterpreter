@@ -201,27 +201,19 @@ def p_expression_assign(t):
 
 
 ############################ BOUCLES ###################################
+
 # statements
 def p_statement_while(t):
-    'inst : while'
-    t[0] = t[1]
-    
-def p_statement_for(t):
-    'inst : for'
-    t[0] = t[1]    
-    
-# expressions
-def p_expression_while(t):
-    'while : WHILE LPAREN condition RPAREN b_bloc'
+    'inst : WHILE LPAREN condition RPAREN b_bloc'
     t[0] = ('while', t[3], t[5])
     
-def p_expression_for(t):
-    'for : FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc'
+def p_statement_for(t):
+    'inst : FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc'
     t[0] = ('for', t[3], t[5], t[7], t[9])
       
 ########################## CONDITIONS #####################################
 
-def p_statement_condition(t):
+def p_statement_if(t):
     'inst : if'
     t[0] = t[1]
 
@@ -295,6 +287,6 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'for(a=0; a < 5; a++){print(a);}'
+s = 'a=3+3; while(a+1 < 10){print(a); a++;}'
    
 parser.parse(s)
