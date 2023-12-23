@@ -85,6 +85,7 @@ def p_start(t):
     
 names={}
 functions={}
+function_params={}
 
 
 def evalInst(t):
@@ -134,8 +135,9 @@ def evalInst(t):
             evalInst(t[4])      # increment
             
     if t[0]=='function':
-            functions[t[1]] = t[2]
-            
+            functions[t[1]] = t[3]        # associer le bloc d'instructions à la fonction
+            function_params[t[1]] = t[2]  # associer le tableau de paramètres à la fonction
+                   
     if t[0]=='call':
         if t[1] in functions:
             evalInst(functions[t[1]])  # appeler functions[fonction appelée]
@@ -274,20 +276,30 @@ def p_expression_binop_minus(t):
     
     
 ############################ FONCTIONS ###################################
-
-def p_statement_print(t):
-    'inst : PRINT LPAREN expression RPAREN COLON'
-    t[0] = ('print',t[3])
-    
+   
 # déclarer une fonction void et l'ajouter au dictionnaire
 def p_statement_function_void(t):                
     'inst : FUNCTION NAME LPAREN params RPAREN b_bloc'
-    t[0] = ('function', t[2], t[5])
+    t[0] = ('function', t[2], t[4], t[6])
     
 # appeler une fonction void   
 def p_statement_call_function_void(t):
     'inst : NAME LPAREN RPAREN COLON'
     t[0] = ('call', t[1])
+    
+
+def p_expression_params(t):
+    '''params : NAME COMMA params 
+              | NAME'''
+    if len(t) == 2:
+            t[0] = ('params', [t[1]])
+    else :  t[0] = ('params', [t[1]] + t[3][1])
+    
+    
+
+def p_statement_print(t):
+    'inst : PRINT LPAREN expression RPAREN COLON'
+    t[0] = ('print',t[3])
   
 ############################ EXPRESSIONS ###################################
 
@@ -323,6 +335,6 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'function test(){print(1);} for(a = 1; a < 10; a++){teste();}'
+s = 'function test(a, b, c){print(1);}'
    
 parser.parse(s)
