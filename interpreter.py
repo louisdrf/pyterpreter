@@ -281,7 +281,7 @@ def p_statement_print(t):
     
 # déclarer une fonction void et l'ajouter au dictionnaire
 def p_statement_function_void(t):                
-    'inst : FUNCTION NAME LPAREN RPAREN b_bloc'
+    'inst : FUNCTION NAME LPAREN params RPAREN b_bloc'
     t[0] = ('function', t[2], t[5])
     
 # appeler une fonction void   
