@@ -124,8 +124,8 @@ def evalInst(t):
             evalInst(t[2])
         
     if t[0]=='while':
-        while evalExpr(t[1]):
-            evalInst(t[2])
+        while evalExpr(t[1]):  # condition
+            evalInst(t[2])     # instructions
     
     if t[0]=='for':
         evalInst(t[1])          # assign
@@ -134,10 +134,14 @@ def evalInst(t):
             evalInst(t[4])      # increment
             
     if t[0]=='function':
-        functions[t[1]] = t[2]
+            functions[t[1]] = t[2]
             
     if t[0]=='call':
-        evalInst(functions[t[1]])    # appeler functions[fonction appelée]
+        if t[1] in functions:
+            evalInst(functions[t[1]])  # appeler functions[fonction appelée]
+        else:
+            raise ValueError(f"Error: Function '{t[1]}' not found") # stopper l'exécution en levant une erreur
+       
         
             
     
@@ -284,17 +288,7 @@ def p_statement_function_void(t):
 def p_statement_call_function_void(t):
     'inst : NAME LPAREN RPAREN COLON'
     t[0] = ('call', t[1])
-    
-    
-#def p_expression_function_args(t):
-#    '''args : NAME COMMA args
-#            | NAME'''
-#    if len(t) > 2:
-#        t[0] = t[1] + [t[3]]
-#    else:
-#        t[0] = [t[1]]
-        
-   
+  
 ############################ EXPRESSIONS ###################################
 
 def p_expression_bracket_bloc(t):
@@ -329,6 +323,6 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'function test(){print(1);} for(a = 4; a > 0; a-=1){test();}'
+s = 'function test(){print(1);} for(a = 1; a < 10; a++){teste();}'
    
 parser.parse(s)
