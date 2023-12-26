@@ -85,7 +85,6 @@ def p_start(t):
     
 names={}
 functions={}
-function_params={}
 
 
 def evalInst(t):
@@ -133,16 +132,31 @@ def evalInst(t):
         while evalExpr(t[2]):   # condition
             evalInst(t[3])      # linst
             evalInst(t[4])      # increment
-            
+    
     if t[0]=='function':
-            functions[t[1]] = t[3]        # associer le bloc d'instructions à la fonction
-            function_params[t[1]] = t[2]  # associer le tableau de paramètres à la fonction
+        functions[t[1]] = {'params': t[2], 'instructions': t[3]}
+                   
+    if t[0]=='call_params':
+        function = functions[t[1]] # on récupère l'objet fonction dans le dictionnaire
+        params = t[2]
+        
+        if len(params) != len(function['params']):
+            raise ValueError(f"Erreur: Nombre d'arguments invalide pour '{t[1]}'")
+        
+        elif len(function['params']) > 0: 
+            params_values = {}
+            i = 0
+            for param_value in params:
+                params_values[function['params'][i]] = evalExpr(param_value) # la fonction contiendra params {'a' : valeur, 'b': valeur...}
+                i+=1
+        print(function['params'])
+                
                    
     if t[0]=='call':
         if t[1] in functions:
-            evalInst(functions[t[1]])  # appeler functions[fonction appelée]
+            evalInst(functions[t[1]]['instructions'])  # appeler functions[fonction appelée]
         else:
-            raise ValueError(f"Error: Function '{t[1]}' not found") # stopper l'exécution en levant une erreur
+            raise ValueError(f"Erreur: La fonction '{t[1]}' n'a pas été déclarée") 
        
         
             
@@ -264,11 +278,9 @@ def p_expression_binop_times(t):
     'expression : expression TIMES expression'
     t[0] = t[1] * t[3]
 
-
 def p_expression_binop_divide(t):
     'expression : expression DIVIDE expression'
     t[0] = t[1] / t[3]
-
 
 def p_expression_binop_minus(t):
     'expression : expression MINUS expression'
@@ -281,13 +293,19 @@ def p_expression_binop_minus(t):
 def p_statement_function_void(t):                
     'inst : FUNCTION NAME LPAREN params RPAREN b_bloc'
     t[0] = ('function', t[2], t[4], t[6])
-    
+     
 # appeler une fonction void   
 def p_statement_call_function_void(t):
-    'inst : NAME LPAREN RPAREN COLON'
-    t[0] = ('call', t[1])
+    'inst : NAME LPAREN call_params RPAREN COLON'
+    t[0] = ('call', t[1], t[3])
     
-
+def p_expression_call_params(t):
+    '''call_params : expression COMMA call_params 
+                   | expression'''
+    if len(t) == 2:
+            t[0] = ('call_params', [t[1]])
+    else :  t[0] = ('call_params', [t[1]] + t[3][1])
+    
 def p_expression_params(t):
     '''params : NAME COMMA params 
               | NAME'''
@@ -335,6 +353,6 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'function test(a, b, c){print(1);}'
+s = 'function test(a, b){print(1);}  teste(3, 3);'
    
 parser.parse(s)
