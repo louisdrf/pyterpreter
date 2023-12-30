@@ -85,9 +85,12 @@ def p_start(t):
     
 names={}
 functions={}
+current_function=""
 
 
 def evalInst(t):
+    global current_function
+
     print('evalInst', t)
     if type(t)!=tuple : 
         print('warning')
@@ -100,24 +103,32 @@ def evalInst(t):
     if t[0]=='print' :
         print(evalExpr(t[1]))
         
-    if t[0]=='assign' : 
-        names[t[1]]=evalExpr(t[2])
-       
+    if t[0]=='assign' :
+        if len(t) > 3:
+            names[(t[1], t[3])]=evalExpr(t[2]) # déclaration de fonction
+        else:
+            scope = current_function if names[(t[1], current_function)] else "global"
+            names[(t[1], scope)]=evalExpr(t[2])
+
     if t[0]=='increment':
-        names[t[1]] += 1
+        scope = current_function if names[(t[1], current_function)] else "global"
+        names[(t[1], scope)] += 1
         
     if t[0]=='decrement':
-        names[t[1]] -= 1
+        scope = current_function if names[(t[1], current_function)] else "global"
+        names[(t[1], scope)] -= 1
         
     if t[0]=='operator_assign':
+        scope = current_function if names[(t[1], current_function)] else "global"
+
         if t[2]=='+':
-            names[t[1]] += evalExpr(t[3])
+            names[(t[1], scope)] += evalExpr(t[3])
         elif t[2]=='-':
-            names[t[1]] -= evalExpr(t[3])
+            names[(t[1], scope)] -= evalExpr(t[3])
         elif t[2]=='/':
-            names[t[1]] /= evalExpr(t[3])
+            names[(t[1], scope)] /= evalExpr(t[3])
         elif t[2]=='*':
-            names[t[1]] *= evalExpr(t[3])
+            names[(t[1], scope)] *= evalExpr(t[3])
             
     if t[0]=='if' : 
         if evalExpr(t[1]):
@@ -135,26 +146,17 @@ def evalInst(t):
     
     if t[0]=='function':
         functions[t[1]] = {'params': t[2], 'instructions': t[3]}
-                   
-    if t[0]=='call_params':
-        function = functions[t[1]] # on récupère l'objet fonction dans le dictionnaire
-        params = t[2]
-        
-        if len(params) != len(function['params']):
-            raise ValueError(f"Erreur: Nombre d'arguments invalide pour '{t[1]}'")
-        
-        elif len(function['params']) > 0: 
-            params_values = {}
-            i = 0
-            for param_value in params:
-                params_values[function['params'][i]] = evalExpr(param_value) # la fonction contiendra params {'a' : valeur, 'b': valeur...}
-                i+=1
-        print(function['params'])
-                
-                   
+        if len(t[2]) > 0: # Si la fonction a des paramètres à déclarer
+            for param in t[2]:
+                evalInst(('assign', param, 0, t[1]))
+               
     if t[0]=='call':
         if t[1] in functions:
+            for i in range(len(functions[t[1]]['params'])):
+                names[functions[t[1]]['params'][i], t[1]] = t[2][i]
+            current_function = t[1]
             evalInst(functions[t[1]]['instructions'])  # appeler functions[fonction appelée]
+            current_function = ""
         else:
             raise ValueError(f"Erreur: La fonction '{t[1]}' n'a pas été déclarée") 
        
@@ -166,8 +168,10 @@ def evalExpr(t):
     if type(t) == int:
         return t  
     elif type(t) == str:
-        if t in names:
-            return names[t]
+        if (t, current_function) in names: # On vérifie si une variable locale existe
+            return names[(t, current_function)]
+        elif (t, "global") in names:
+            return names[(t, "global")]
         else:
             print(f"Error: Variable '{t}' not found")
             return None
@@ -294,6 +298,16 @@ def p_statement_function_void(t):
     'inst : FUNCTION NAME LPAREN params RPAREN b_bloc'
     t[0] = ('function', t[2], t[4], t[6])
      
+def p_expression_params(t):
+    '''params : NAME COMMA params 
+              | NAME'''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[3] = [t[3]]
+        t[3].append(t[1])
+        t[0] = t[3]
+
 # appeler une fonction void   
 def p_statement_call_function_void(t):
     'inst : NAME LPAREN call_params RPAREN COLON'
@@ -303,17 +317,11 @@ def p_expression_call_params(t):
     '''call_params : expression COMMA call_params 
                    | expression'''
     if len(t) == 2:
-            t[0] = ('call_params', [t[1]])
-    else :  t[0] = ('call_params', [t[1]] + t[3][1])
-    
-def p_expression_params(t):
-    '''params : NAME COMMA params 
-              | NAME'''
-    if len(t) == 2:
-            t[0] = ('params', [t[1]])
-    else :  t[0] = ('params', [t[1]] + t[3][1])
-    
-    
+        t[0] = t[1]
+    else:
+        t[3] = [t[3]]
+        t[3].append(t[1])
+        t[0] = t[3]
 
 def p_statement_print(t):
     'inst : PRINT LPAREN expression RPAREN COLON'
@@ -353,6 +361,6 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'function test(a, b){print(1);}  teste(3, 3);'
+s = 'function add(a,b){print(a);}  add(3,4);'
    
 parser.parse(s)
