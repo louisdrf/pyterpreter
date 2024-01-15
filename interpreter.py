@@ -6,9 +6,10 @@ reserved = {
    'print'   : 'PRINT',
    'while'   : 'WHILE',
    'for'     : 'FOR',
-   'function': 'FUNCTION',
+   'magic_val'   : 'FUNCTION', 
    'return'  : 'RETURN'
 }
+
 
 tokens = [
     'NAME','NUMBER',
@@ -106,19 +107,19 @@ def evalInst(t):
         if len(t) > 3:
             names[(t[1], t[3])]=evalExpr(t[2]) 
         else:
-            scope = current_function if names[(t[1], current_function)] else "global"
+            scope = current_function if (t[1], current_function) in names else "global"
             names[(t[1], scope)]=evalExpr(t[2])
 
     if t[0]=='increment':
-        scope = current_function if names[(t[1], current_function)] else "global"
+        scope = current_function if (t[1], current_function) in names else "global"
         names[(t[1], scope)] += 1
         
     if t[0]=='decrement':
-        scope = current_function if names[(t[1], current_function)] else "global"
+        scope = current_function if (t[1], current_function) in names else "global"
         names[(t[1], scope)] -= 1
         
     if t[0]=='operator_assign':
-        scope = current_function if names[(t[1], current_function)] else "global"
+        scope = current_function if (t[1], current_function) in names else "global"
 
         if t[2]=='+':
             names[(t[1], scope)] += evalExpr(t[3])
@@ -143,25 +144,36 @@ def evalInst(t):
             evalInst(t[3])      # linst
             evalInst(t[4])      # increment
     
+    
+    
     if t[0]=='function':
-        functions[t[1]] = {'params': t[2], 'instructions': t[3]}
-        if len(t[2]) > 0: # Si la fonction a des paramètres à déclarer
-            for param in t[2]:
-                evalInst(('assign', param, 0, t[1]))
+        function_name = t[1]
+        params        = t[2]
+        instructions  = t[3]
+        
+        functions[function_name] = {'params': params, 'instructions': instructions}
+        if len(params) > 0: # Si la fonction a des paramètres à déclarer
+            for param in params:
+                evalInst(('assign', param, 0, function_name))
                
+               
+                        
     if t[0]=='call':
-        if t[1] in functions:
-            for i in range(len(functions[t[1]]['params'])):
-                names[functions[t[1]]['params'][i], t[1]] = t[2][i]
-            current_function = t[1]
-            evalInst(functions[t[1]]['instructions'])  # appeler functions[fonction appelée]
+        fname  = t[1]
+        params = t[2]
+    
+        if fname in functions:
+            for i in range(len(functions[fname]['params'])):
+                names[ functions[fname]['params'][i], fname ] = evalExpr(params[i]) 
+                
+            current_function = fname
+            evalInst(functions[fname]['instructions'])  # appeler functions[fonction appelée]
             current_function = ""
         else:
-            raise ValueError(f"Erreur: La fonction '{t[1]}' n'a pas été déclarée") 
+            raise ValueError(f"Erreur: La fonction '{fname}' n'a pas été déclarée") 
        
         
-            
-    
+               
 def evalExpr(t):
     print('evalExpr', t)
     if type(t) == int:
@@ -175,8 +187,17 @@ def evalExpr(t):
             print(f"Error: Variable '{t}' not found")
             return None
         
-    elif type(t)==tuple:
-        if t[0] == '==':
+    elif type(t) == tuple:
+        if   t[0] == '+':
+            return evalExpr(t[1]) + evalExpr(t[2])
+        elif t[0] == '*':
+            return evalExpr(t[1]) * evalExpr(t[2])
+        elif t[0] == '/':
+            return evalExpr(t[1]) / evalExpr(t[2])
+        elif t[0] == '-':
+            return evalExpr(t[1]) - evalExpr(t[2])
+        # Condition
+        elif t[0] == '==':
             return evalExpr(t[1]) == evalExpr(t[2])
         elif t[0] == '<':
             return evalExpr(t[1]) < evalExpr(t[2])
@@ -273,23 +294,11 @@ def p_expression_condition(t):
 
 ############################ OPERATIONS ###################################
 
-def p_expression_binop_plus(t):
-    'expression : expression PLUS expression'
-    t[0] = t[1] + t[3]
+def p_expression_operator(t):
+    '''expression : expression operator expression'''
+    t[0] = (t[2],t[1],t[3])
 
-def p_expression_binop_times(t):
-    'expression : expression TIMES expression'
-    t[0] = t[1] * t[3]
 
-def p_expression_binop_divide(t):
-    'expression : expression DIVIDE expression'
-    t[0] = t[1] / t[3]
-
-def p_expression_binop_minus(t):
-    'expression : expression MINUS expression'
-    t[0] = t[1] - t[3]
-    
-    
 ############################ FONCTIONS ###################################
    
 # déclarer une fonction void et l'ajouter au dictionnaire
@@ -312,6 +321,7 @@ def p_statement_call_function_void(t):
     'inst : NAME LPAREN call_params RPAREN COLON'
     t[0] = ('call', t[1], t[3])
     
+    
 def p_expression_call_params(t):
     '''call_params : expression COMMA call_params 
                    | expression'''
@@ -323,7 +333,7 @@ def p_expression_call_params(t):
         t[0] = t[3]
 
 def p_statement_print(t):
-    'inst : PRINT LPAREN expression RPAREN COLON'
+    'inst : PRINT LPAREN expression RPAREN COLON' 
     t[0] = ('print',t[3])
   
 ############################ EXPRESSIONS ###################################
@@ -332,7 +342,7 @@ def p_expression_bracket_bloc(t):
     'b_bloc : LBRACKET linst RBRACKET'
     t[0] = t[2]
     
-def p_expression_operator(t):
+def p_operator(t):
     '''operator : PLUS
                 | MINUS
                 | DIVIDE
@@ -360,6 +370,16 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'function add(a,b){print(a); print(b);}  add(3,4); c=4; print(c+1);'
+s = '''
+magic_val fonction(a, b) {
+    print(a+b);
+}
+fonction(1, 2);
+
+x=4; y = 2; 
+print(x);
+fonction(x, y);
+'''
+
    
 parser.parse(s)
