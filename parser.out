@@ -34,11 +34,11 @@ Rule 23    expression -> expression TIMES expression
 Rule 24    expression -> expression DIVIDE expression
 Rule 25    expression -> expression MINUS expression
 Rule 26    inst -> FUNCTION NAME LPAREN params RPAREN b_bloc
-Rule 27    inst -> NAME LPAREN call_params RPAREN COLON
-Rule 28    call_params -> expression COMMA call_params
-Rule 29    call_params -> expression
-Rule 30    params -> NAME COMMA params
-Rule 31    params -> NAME
+Rule 27    params -> NAME COMMA params
+Rule 28    params -> NAME
+Rule 29    inst -> NAME LPAREN call_params RPAREN COLON
+Rule 30    call_params -> expression COMMA call_params
+Rule 31    call_params -> expression
 Rule 32    inst -> PRINT LPAREN expression RPAREN COLON
 Rule 33    b_bloc -> LBRACKET linst RBRACKET
 Rule 34    operator -> PLUS
@@ -52,8 +52,8 @@ Rule 40    expression -> NAME
 Terminals, with rules where they appear
 
 AND                  : 21
-COLON                : 4 5 6 10 13 13 14 14 15 15 27 32
-COMMA                : 28 30
+COLON                : 4 5 6 10 13 13 14 14 15 15 29 32
+COMMA                : 27 30
 DIVIDE               : 24 36
 EQUAL                : 9 11
 EQUALS               : 17
@@ -63,16 +63,16 @@ HIGHER               : 19
 IF                   : 16
 LBRACKET             : 33
 LOWER                : 18
-LPAREN               : 12 13 14 15 16 26 27 32 38
+LPAREN               : 12 13 14 15 16 26 29 32 38
 MINUS                : 8 8 25 35
-NAME                 : 7 8 9 11 26 27 30 31 40
+NAME                 : 7 8 9 11 26 27 28 29 40
 NUMBER               : 39
 OR                   : 20
 PLUS                 : 7 7 22 34
 PRINT                : 32
 RBRACKET             : 33
 RETURN               : 
-RPAREN               : 12 13 14 15 16 26 27 32 38
+RPAREN               : 12 13 14 15 16 26 29 32 38
 THEN                 : 
 TIMES                : 23 37
 WHILE                : 12
@@ -82,16 +82,16 @@ Nonterminals, with rules where they appear
 
 assign               : 10 13 14 15
 b_bloc               : 12 13 14 15 16 26
-call_params          : 27 28
+call_params          : 29 30
 condition            : 12 13 14 15 16
 decrement            : 5 15
-expression           : 9 11 17 17 18 18 19 19 20 20 21 21 22 22 23 23 24 24 25 25 28 29 32 38
+expression           : 9 11 17 17 18 18 19 19 20 20 21 21 22 22 23 23 24 24 25 25 30 31 32 38
 increment            : 4 13
 inst                 : 2 3
 linst                : 1 2 33
 operator             : 9
 operator_assign      : 6 14
-params               : 26 30
+params               : 26 27
 start                : 0
 
 Parsing method: LALR
@@ -112,7 +112,7 @@ state 0
     (15) inst -> . FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc
     (16) inst -> . IF LPAREN condition RPAREN b_bloc
     (26) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
-    (27) inst -> . NAME LPAREN call_params RPAREN COLON
+    (29) inst -> . NAME LPAREN call_params RPAREN COLON
     (32) inst -> . PRINT LPAREN expression RPAREN COLON
     (7) increment -> . NAME PLUS PLUS
     (8) decrement -> . NAME MINUS MINUS
@@ -154,7 +154,7 @@ state 2
     (15) inst -> . FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc
     (16) inst -> . IF LPAREN condition RPAREN b_bloc
     (26) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
-    (27) inst -> . NAME LPAREN call_params RPAREN COLON
+    (29) inst -> . NAME LPAREN call_params RPAREN COLON
     (32) inst -> . PRINT LPAREN expression RPAREN COLON
     (7) increment -> . NAME PLUS PLUS
     (8) decrement -> . NAME MINUS MINUS
@@ -249,7 +249,7 @@ state 11
 
 state 12
 
-    (27) inst -> NAME . LPAREN call_params RPAREN COLON
+    (29) inst -> NAME . LPAREN call_params RPAREN COLON
     (7) increment -> NAME . PLUS PLUS
     (8) decrement -> NAME . MINUS MINUS
     (9) operator_assign -> NAME . operator EQUAL expression
@@ -411,9 +411,9 @@ state 22
 
 state 23
 
-    (27) inst -> NAME LPAREN . call_params RPAREN COLON
-    (28) call_params -> . expression COMMA call_params
-    (29) call_params -> . expression
+    (29) inst -> NAME LPAREN . call_params RPAREN COLON
+    (30) call_params -> . expression COMMA call_params
+    (31) call_params -> . expression
     (22) expression -> . expression PLUS expression
     (23) expression -> . expression TIMES expression
     (24) expression -> . expression DIVIDE expression
@@ -611,8 +611,8 @@ state 38
 state 39
 
     (26) inst -> FUNCTION NAME LPAREN . params RPAREN b_bloc
-    (30) params -> . NAME COMMA params
-    (31) params -> . NAME
+    (27) params -> . NAME COMMA params
+    (28) params -> . NAME
 
     NAME            shift and go to state 60
 
@@ -620,22 +620,22 @@ state 39
 
 state 40
 
-    (27) inst -> NAME LPAREN call_params . RPAREN COLON
+    (29) inst -> NAME LPAREN call_params . RPAREN COLON
 
     RPAREN          shift and go to state 62
 
 
 state 41
 
-    (28) call_params -> expression . COMMA call_params
-    (29) call_params -> expression .
+    (30) call_params -> expression . COMMA call_params
+    (31) call_params -> expression .
     (22) expression -> expression . PLUS expression
     (23) expression -> expression . TIMES expression
     (24) expression -> expression . DIVIDE expression
     (25) expression -> expression . MINUS expression
 
     COMMA           shift and go to state 63
-    RPAREN          reduce using rule 29 (call_params -> expression .)
+    RPAREN          reduce using rule 31 (call_params -> expression .)
     PLUS            shift and go to state 54
     TIMES           shift and go to state 55
     DIVIDE          shift and go to state 56
@@ -918,11 +918,11 @@ state 59
 
 state 60
 
-    (30) params -> NAME . COMMA params
-    (31) params -> NAME .
+    (27) params -> NAME . COMMA params
+    (28) params -> NAME .
 
     COMMA           shift and go to state 80
-    RPAREN          reduce using rule 31 (params -> NAME .)
+    RPAREN          reduce using rule 28 (params -> NAME .)
 
 
 state 61
@@ -934,16 +934,16 @@ state 61
 
 state 62
 
-    (27) inst -> NAME LPAREN call_params RPAREN . COLON
+    (29) inst -> NAME LPAREN call_params RPAREN . COLON
 
     COLON           shift and go to state 82
 
 
 state 63
 
-    (28) call_params -> expression COMMA . call_params
-    (28) call_params -> . expression COMMA call_params
-    (29) call_params -> . expression
+    (30) call_params -> expression COMMA . call_params
+    (30) call_params -> . expression COMMA call_params
+    (31) call_params -> . expression
     (22) expression -> . expression PLUS expression
     (23) expression -> . expression TIMES expression
     (24) expression -> . expression DIVIDE expression
@@ -1029,7 +1029,7 @@ state 68
     (15) inst -> . FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc
     (16) inst -> . IF LPAREN condition RPAREN b_bloc
     (26) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
-    (27) inst -> . NAME LPAREN call_params RPAREN COLON
+    (29) inst -> . NAME LPAREN call_params RPAREN COLON
     (32) inst -> . PRINT LPAREN expression RPAREN COLON
     (7) increment -> . NAME PLUS PLUS
     (8) decrement -> . NAME MINUS MINUS
@@ -1263,9 +1263,9 @@ state 79
 
 state 80
 
-    (30) params -> NAME COMMA . params
-    (30) params -> . NAME COMMA params
-    (31) params -> . NAME
+    (27) params -> NAME COMMA . params
+    (27) params -> . NAME COMMA params
+    (28) params -> . NAME
 
     NAME            shift and go to state 60
 
@@ -1282,23 +1282,23 @@ state 81
 
 state 82
 
-    (27) inst -> NAME LPAREN call_params RPAREN COLON .
+    (29) inst -> NAME LPAREN call_params RPAREN COLON .
 
-    WHILE           reduce using rule 27 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    FOR             reduce using rule 27 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    IF              reduce using rule 27 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    FUNCTION        reduce using rule 27 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    NAME            reduce using rule 27 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    PRINT           reduce using rule 27 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    $end            reduce using rule 27 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    RBRACKET        reduce using rule 27 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    WHILE           reduce using rule 29 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    FOR             reduce using rule 29 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    IF              reduce using rule 29 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    FUNCTION        reduce using rule 29 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    NAME            reduce using rule 29 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    PRINT           reduce using rule 29 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    $end            reduce using rule 29 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    RBRACKET        reduce using rule 29 (inst -> NAME LPAREN call_params RPAREN COLON .)
 
 
 state 83
 
-    (28) call_params -> expression COMMA call_params .
+    (30) call_params -> expression COMMA call_params .
 
-    RPAREN          reduce using rule 28 (call_params -> expression COMMA call_params .)
+    RPAREN          reduce using rule 30 (call_params -> expression COMMA call_params .)
 
 
 state 84
@@ -1329,7 +1329,7 @@ state 85
     (15) inst -> . FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc
     (16) inst -> . IF LPAREN condition RPAREN b_bloc
     (26) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
-    (27) inst -> . NAME LPAREN call_params RPAREN COLON
+    (29) inst -> . NAME LPAREN call_params RPAREN COLON
     (32) inst -> . PRINT LPAREN expression RPAREN COLON
     (7) increment -> . NAME PLUS PLUS
     (8) decrement -> . NAME MINUS MINUS
@@ -1367,9 +1367,9 @@ state 86
 
 state 87
 
-    (30) params -> NAME COMMA params .
+    (27) params -> NAME COMMA params .
 
-    RPAREN          reduce using rule 30 (params -> NAME COMMA params .)
+    RPAREN          reduce using rule 27 (params -> NAME COMMA params .)
 
 
 state 88

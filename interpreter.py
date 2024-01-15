@@ -68,8 +68,7 @@ lexer = lex.lex()
 
 # Parsing rules
 precedence = (
-    ('left', 'OR'),
-    ('left', 'AND'),
+    ('left', 'OR', 'AND'),
     ('left', 'EQUALS', 'LOWER', 'HIGHER'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE')
@@ -105,7 +104,7 @@ def evalInst(t):
         
     if t[0]=='assign' :
         if len(t) > 3:
-            names[(t[1], t[3])]=evalExpr(t[2]) # déclaration de fonction
+            names[(t[1], t[3])]=evalExpr(t[2]) 
         else:
             scope = current_function if names[(t[1], current_function)] else "global"
             names[(t[1], scope)]=evalExpr(t[2])
@@ -361,6 +360,6 @@ def p_error(t):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-s = 'function add(a,b){print(a);}  add(3,4);'
+s = 'function add(a,b){print(a); print(b);}  add(3,4); c=4; print(c+1);'
    
 parser.parse(s)
