@@ -1,4 +1,4 @@
-from genereTreeGraphviz2 import printTreeGraph
+# from genereTreeGraphviz2 import printTreeGraph
              
 reserved = {
    'if'      : 'IF',
@@ -6,7 +6,7 @@ reserved = {
    'print'   : 'PRINT',
    'while'   : 'WHILE',
    'for'     : 'FOR',
-   'magic_val'   : 'FUNCTION', 
+   'function': 'FUNCTION', 
    'return'  : 'RETURN'
 }
 
@@ -80,7 +80,7 @@ def p_start(t):
     ''' start : linst'''
     t[0] = ('start',t[1])
     print(t[0])
-    printTreeGraph(t[0])
+    # printTreeGraph(t[0])
     evalInst(t[1])
     
 names={}
@@ -143,21 +143,20 @@ def evalInst(t):
         while evalExpr(t[2]):   # condition
             evalInst(t[3])      # linst
             evalInst(t[4])      # increment
-    
-    
-    
+      
+      
+    if t[0] == 'return':
+       evalExpr(t[1])
+        
+        
     if t[0]=='function':
-        function_name = t[1]
-        params        = t[2]
-        instructions  = t[3]
+        function_name, params, instructions = t[1], t[2], t[3]
         
         functions[function_name] = {'params': params, 'instructions': instructions}
         if len(params) > 0: # Si la fonction a des paramètres à déclarer
             for param in params:
                 evalInst(('assign', param, 0, function_name))
-               
-               
-                        
+                         
     if t[0]=='call':
         fname  = t[1]
         params = t[2]
@@ -169,8 +168,9 @@ def evalInst(t):
             current_function = fname
             evalInst(functions[fname]['instructions'])  # appeler functions[fonction appelée]
             current_function = ""
+            
         else:
-            raise ValueError(f"Erreur: La fonction '{fname}' n'a pas été déclarée") 
+            raise ValueError(f"Erreur: La fonction {fname} n'a pas été déclarée") 
        
         
                
@@ -179,6 +179,7 @@ def evalExpr(t):
     if type(t) == int:
         return t  
     elif type(t) == str:
+        print('tuple', t)
         if (t, current_function) in names: # On vérifie si une variable locale existe
             return names[(t, current_function)]
         elif (t, "global") in names:
@@ -207,6 +208,29 @@ def evalExpr(t):
             return evalExpr(t[1]) and evalExpr(t[2])
         elif t[0] == 'or':
             return evalExpr(t[1]) or evalExpr(t[2])
+        elif t[0]=='call_value':
+            fname  = t[1]
+            params = t[2]
+        
+            if fname in functions:
+                for i in range(len(functions[fname]['params'])):
+                    names[ functions[fname]['params'][i], fname ] = evalExpr(params[i]) 
+                    
+                current_function = fname
+                for j in range(len(functions[fname]['instructions'])):
+                    inst = functions[fname]['instructions'][j]
+                    if(inst[0] =='return'):
+                        returnValue = evalInst(inst)
+                        return returnValue
+                    else:
+                        evalInst(inst)
+                    
+                current_function = ""
+                
+            else:
+                raise ValueError(f"Erreur: La fonction {fname} n'a pas été déclarée")
+            
+            
         else:
             print(f"Error: Unknown operator '{t[0]}'")
             return None
@@ -300,23 +324,34 @@ def p_expression_operator(t):
 
 
 ############################ FONCTIONS ###################################
+
+def p_statement_return(t):
+    'inst : RETURN expression COLON'
+    t[0] = ('return', t[2])
    
-# déclarer une fonction void et l'ajouter au dictionnaire
-def p_statement_function_void(t):                
+# déclarer une fonction 
+def p_statement_function(t):                
     'inst : FUNCTION NAME LPAREN params RPAREN b_bloc'
-    t[0] = ('function', t[2], t[4], t[6])
+    t[0] = ('function', t[2], t[4], t[6]) 
+
      
 def p_expression_params(t):
     '''params : NAME COMMA params 
               | NAME'''
     if len(t) == 2:
-        t[0] = t[1]
+        t[0] = [t[1]]
     else:
-        t[3] = [t[3]]
-        t[3].append(t[1])
-        t[0] = t[3]
+        new_param, param_list = t[1], t[3]
+        param_list.append(new_param)
+        t[0] = param_list
+        
+# appeler une fonction qui retourne une valeur
+def p_statement_call_function_value(t):
+    'expression : NAME LPAREN call_params RPAREN'
+    t[0] = ('call_value', t[1], t[3])
 
-# appeler une fonction void   
+
+# appeler une fonction void
 def p_statement_call_function_void(t):
     'inst : NAME LPAREN call_params RPAREN COLON'
     t[0] = ('call', t[1], t[3])
@@ -326,12 +361,13 @@ def p_expression_call_params(t):
     '''call_params : expression COMMA call_params 
                    | expression'''
     if len(t) == 2:
-        t[0] = t[1]
+        t[0] = [t[1]]
     else:
-        t[3] = [t[3]]
-        t[3].append(t[1])
-        t[0] = t[3]
+        new_param, param_list = t[1], t[3]
+        param_list.append(new_param)
+        t[0] = param_list
 
+    
 def p_statement_print(t):
     'inst : PRINT LPAREN expression RPAREN COLON' 
     t[0] = ('print',t[3])
@@ -342,6 +378,7 @@ def p_expression_bracket_bloc(t):
     'b_bloc : LBRACKET linst RBRACKET'
     t[0] = t[2]
     
+       
 def p_operator(t):
     '''operator : PLUS
                 | MINUS
@@ -371,14 +408,12 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-magic_val fonction(a, b) {
-    print(a+b);
+function bjr(a, b, c) { 
+    print(a+b-c);
+    return a-b;
 }
-fonction(1, 2);
 
-x=4; y = 2; 
-print(x);
-fonction(x, y);
+bjr(5, 4, 8);
 '''
 
    
