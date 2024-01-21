@@ -165,6 +165,7 @@ def evalInst(t):
                 evalInst(('assign', param, 0, function_name))
                          
     if t[0]=='call':
+        current_return_val = None
         fname  = t[1]
         params = t[2]
     
@@ -409,14 +410,23 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-function test() {
-    print(18);
-    return 2;
+function test(a, b) {
+    return a + b;
+}
+
+function test2(i) {
+    print(16);
+    for(a = 0; a < 10; a++) {
+        i+=2;
+    }
+    return i;
     print(17);
 }
 
-x = test();
-print(x);
+x = test(10, 5);
+y = test2(0);
+print(x-1);
+print(y);
 '''
 
    
