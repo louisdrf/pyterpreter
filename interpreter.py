@@ -1,4 +1,7 @@
 # from genereTreeGraphviz2 import printTreeGraph
+class Color:
+    BLUE = '\033[94m'
+    RESET = '\033[0m'
              
 reserved = {
    'if'      : 'IF',
@@ -7,23 +10,20 @@ reserved = {
    'while'   : 'WHILE',
    'for'     : 'FOR',
    'function': 'FUNCTION', 
-   'return'  : 'RETURN'
+   'return'  : 'RETURN',
+   'sprint'  : 'SPRINT'
 }
 
 
 tokens = [
-    'NAME','NUMBER',
+    'NAME','NUMBER','STRING',
     'PLUS','MINUS','TIMES','DIVIDE', 
     'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA',
     'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER'
     ] + list(reserved.values())
 
-# Tokens
-def t_NAME(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'NAME')    # Check for reserved words
-    return t
 
+# Tokens
 t_PLUS    = r'\+'
 t_MINUS   = r'-'
 t_TIMES   = r'\*'
@@ -40,6 +40,20 @@ t_OR      = r'\|'
 t_EQUALS  = r'=='
 t_LOWER   = r'\<'
 t_HIGHER  = r'\>'
+
+
+def t_STRING(t):
+    r'\"[^\"]*\"'
+    t.value = t.value[1:-1]
+    return t
+
+
+def t_NAME(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'NAME')    # Check for reserved words
+    return t
+
+
 
 def t_NUMBER(t):
     r'\d+'
@@ -110,6 +124,9 @@ def evalInst(t):
     if t[0]=='print' :
         print(evalExpr(t[1]))
         
+    if t[0] == 'sprint':
+        print(f"{Color.BLUE}{t[1]}{Color.RESET}")
+            
     if t[0]=='assign' :
         if len(t) > 3:
             names[(t[1], t[3])]=evalExpr(t[2]) 
@@ -369,7 +386,11 @@ def p_expression_params(t):
     
 def p_statement_print(t):
     'inst : PRINT LPAREN expression RPAREN COLON' 
-    t[0] = ('print',t[3])
+    t[0] = ('print', t[3])
+    
+def p_statement_print_string(t):
+    'inst : SPRINT LPAREN STRING RPAREN COLON' 
+    t[0] = ('sprint', t[3])
   
 ############################ EXPRESSIONS ###################################
 
@@ -397,6 +418,7 @@ def p_expression_name(t):
     'expression : NAME'
     t[0] = t[1]
 
+    
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
  
@@ -410,23 +432,9 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-function test(a, b) {
-    return a + b;
-}
-
-function test2(i) {
-    print(16);
-    for(a = 0; a < 10; a++) {
-        i+=2;
-    }
-    return i;
-    print(17);
-}
-
-x = test(10, 5);
-y = test2(0);
-print(x-1);
-print(y);
+sprint("texte à afficher");
+x = 5;
+print(x*2);
 '''
 
    
