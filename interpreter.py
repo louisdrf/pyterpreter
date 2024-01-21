@@ -179,7 +179,6 @@ def evalExpr(t):
     if type(t) == int:
         return t  
     elif type(t) == str:
-        print('tuple', t)
         if (t, current_function) in names: # On vérifie si une variable locale existe
             return names[(t, current_function)]
         elif (t, "global") in names:
@@ -208,6 +207,7 @@ def evalExpr(t):
             return evalExpr(t[1]) and evalExpr(t[2])
         elif t[0] == 'or':
             return evalExpr(t[1]) or evalExpr(t[2])
+        
         elif t[0]=='call_value':
             fname  = t[1]
             params = t[2]
@@ -333,18 +333,7 @@ def p_statement_return(t):
 def p_statement_function(t):                
     'inst : FUNCTION NAME LPAREN params RPAREN b_bloc'
     t[0] = ('function', t[2], t[4], t[6]) 
-
-     
-def p_expression_params(t):
-    '''params : NAME COMMA params 
-              | NAME'''
-    if len(t) == 2:
-        t[0] = [t[1]]
-    else:
-        new_param, param_list = t[1], t[3]
-        param_list.append(new_param)
-        t[0] = param_list
-        
+    
 # appeler une fonction qui retourne une valeur
 def p_statement_call_function_value(t):
     'expression : NAME LPAREN call_params RPAREN'
@@ -359,14 +348,33 @@ def p_statement_call_function_void(t):
     
 def p_expression_call_params(t):
     '''call_params : expression COMMA call_params 
-                   | expression'''
+                   | expression
+                   | empty_params'''
+    
     if len(t) == 2:
-        t[0] = [t[1]]
+        if t[1] == []:
+            t[0] = []
+        else:
+            t[0] = [t[1]]
     else:
         new_param, param_list = t[1], t[3]
         param_list.append(new_param)
         t[0] = param_list
 
+
+def p_expression_params(t):
+    '''params : NAME COMMA params 
+              | NAME
+              | empty_params'''
+    if len(t) == 2:
+        if t[1] == []:
+            t[0] = []
+        else:
+            t[0] = [t[1]]
+    else:
+        new_param, param_list = t[1], t[3]
+        param_list.append(new_param)
+        t[0] = param_list
     
 def p_statement_print(t):
     'inst : PRINT LPAREN expression RPAREN COLON' 
@@ -400,7 +408,10 @@ def p_expression_name(t):
 
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
-    
+ 
+def p_expression_empty_params(t):
+    'empty_params :'
+    t[0] = []   
 
 #####################################################################
 
@@ -408,12 +419,12 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-function bjr(a, b, c) { 
-    print(a+b-c);
-    return a-b;
+function bjr() { 
+    return 1;
 }
 
-bjr(5, 4, 8);
+x = bjr();
+print(x);
 '''
 
    
