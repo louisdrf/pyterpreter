@@ -83,22 +83,29 @@ def p_start(t):
     # printTreeGraph(t[0])
     evalInst(t[1])
     
-names={}
-functions={}
-current_function=""
-
+    
+    
+names = {}
+functions = {}
+current_function = ""
+current_return_val = None
 
 def evalInst(t):
     global current_function
-
+    global current_return_val
+    
+    if current_return_val is not None and current_function:
+        return
+    
     print('evalInst', t)
     if type(t)!=tuple : 
         print('warning')
         return
     
-    if t[0]=='bloc' : 
-        evalInst(t[1])
-        evalInst(t[2])
+    if t[0]=='bloc' :
+            evalInst(t[1])
+            evalInst(t[2])
+    
     
     if t[0]=='print' :
         print(evalExpr(t[1]))
@@ -144,9 +151,9 @@ def evalInst(t):
             evalInst(t[3])      # linst
             evalInst(t[4])      # increment
       
-      
+    
     if t[0] == 'return':
-       evalExpr(t[1])
+       current_return_val = evalExpr(t[1])
         
         
     if t[0]=='function':
@@ -162,11 +169,13 @@ def evalInst(t):
         params = t[2]
     
         if fname in functions:
-            for i in range(len(functions[fname]['params'])):
-                names[ functions[fname]['params'][i], fname ] = evalExpr(params[i]) 
+            function = functions[fname]
+            
+            for i in range(len(function['params'])):
+                names[ function['params'][i], fname ] = evalExpr(params[i]) 
                 
             current_function = fname
-            evalInst(functions[fname]['instructions'])  # appeler functions[fonction appelée]
+            evalInst(function['instructions'])
             current_function = ""
             
         else:
@@ -208,28 +217,9 @@ def evalExpr(t):
         elif t[0] == 'or':
             return evalExpr(t[1]) or evalExpr(t[2])
         
-        elif t[0]=='call_value':
-            fname  = t[1]
-            params = t[2]
-        
-            if fname in functions:
-                for i in range(len(functions[fname]['params'])):
-                    names[ functions[fname]['params'][i], fname ] = evalExpr(params[i]) 
-                    
-                current_function = fname
-                for j in range(len(functions[fname]['instructions'])):
-                    inst = functions[fname]['instructions'][j]
-                    if(inst[0] =='return'):
-                        returnValue = evalInst(inst)
-                        return returnValue
-                    else:
-                        evalInst(inst)
-                    
-                current_function = ""
-                
-            else:
-                raise ValueError(f"Erreur: La fonction {fname} n'a pas été déclarée")
-            
+        elif t[0] == 'call_value':
+            evalInst(('call', t[1], t[2]))
+            return current_return_val
             
         else:
             print(f"Error: Unknown operator '{t[0]}'")
@@ -241,7 +231,7 @@ def evalExpr(t):
 def p_line(t):
     '''linst : linst inst 
             | inst '''
-    if len(t)== 3 :
+    if len(t) == 3 :
         t[0] = ('bloc',t[1], t[2])
     else:
         t[0] = ('bloc',t[1], 'empty')
@@ -419,11 +409,13 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-function bjr() { 
-    return 1;
+function test() {
+    print(18);
+    return 2;
+    print(17);
 }
 
-x = bjr();
+x = test();
 print(x);
 '''
 
