@@ -19,7 +19,7 @@ tokens = [
     'NAME','NUMBER','STRING',
     'PLUS','MINUS','TIMES','DIVIDE', 
     'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA',
-    'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER'
+    'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER', 'HIGHEQUAL', 'LOWEQUAL',
     ] + list(reserved.values())
 
 
@@ -40,6 +40,8 @@ t_OR      = r'\|'
 t_EQUALS  = r'=='
 t_LOWER   = r'\<'
 t_HIGHER  = r'\>'
+t_HIGHEQUAL = r'\>='
+t_LOWEQUAL = r'\<='
 
 
 def t_STRING(t):
@@ -84,7 +86,7 @@ lexer = lex.lex()
 # Parsing rules
 precedence = (
     ('left', 'OR', 'AND'),
-    ('left', 'EQUALS', 'LOWER', 'HIGHER'),
+    ('left', 'EQUALS', 'LOWER', 'HIGHER', 'HIGHEQUAL', 'LOWEQUAL'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE')
 )
@@ -230,6 +232,10 @@ def evalExpr(t):
             return evalExpr(t[1]) < evalExpr(t[2])
         elif t[0] == '>':
             return evalExpr(t[1]) > evalExpr(t[2])
+        elif t[0] == '<=':
+            return evalExpr(t[1]) <= evalExpr(t[2])
+        elif t[0] == '>=':
+            return evalExpr(t[1]) >= evalExpr(t[2])
         elif t[0] == 'and':
             return evalExpr(t[1]) and evalExpr(t[2])
         elif t[0] == 'or':
@@ -319,6 +325,8 @@ def p_expression_condition(t):
     '''condition : expression EQUALS expression
                  | expression LOWER expression
                  | expression HIGHER expression
+                 | expression HIGHEQUAL expression
+                 | expression LOWEQUAL expression
                  | expression OR expression
                  | expression AND expression'''
     t[0] = (t[2],t[1],t[3])
@@ -432,9 +440,13 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-sprint("texte à afficher");
-x = 5;
-print(x*2);
+function carre(a) {
+    return a*a;
+}
+
+x = 10;
+x = carre(x);
+print(x);
 '''
 
    
