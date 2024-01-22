@@ -11,12 +11,14 @@ reserved = {
    'for'     : 'FOR',
    'function': 'FUNCTION', 
    'return'  : 'RETURN',
-   'sprint'  : 'SPRINT'
+   'sprint'  : 'SPRINT',
+   'true'    : 'TRUE',
+   'false'   : 'FALSE'
 }
 
 
 tokens = [
-    'NAME','NUMBER','STRING',
+    'NAME','NUMBER','STRING','TRUE', 'FALSE',
     'PLUS','MINUS','TIMES','DIVIDE', 
     'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA',
     'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER', 'HIGHEQUAL', 'LOWEQUAL',
@@ -49,6 +51,15 @@ def t_STRING(t):
     t.value = t.value[1:-1]
     return t
 
+def t_TRUE(t):
+    r'true'
+    t.value = True
+    return t
+
+def t_FALSE(t):
+    r'false'
+    t.value = False
+    return t
 
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -187,7 +198,7 @@ def evalInst(t):
         current_return_val = None
         fname  = t[1]
         params = t[2]
-    
+        
         if fname in functions:
             function = functions[fname]
             
@@ -205,6 +216,8 @@ def evalInst(t):
                
 def evalExpr(t):
     print('evalExpr', t)
+    if type(t) == bool:
+        return t
     if type(t) == int:
         return t  
     elif type(t) == str:
@@ -422,6 +435,15 @@ def p_expression_number(t):
     'expression : NUMBER'
     t[0] = t[1]
     
+    
+def p_expression_true(t):
+    'expression : TRUE'
+    t[0] = True
+    
+def p_expression_false(t):
+    'expression : FALSE'
+    t[0] = False
+    
 def p_expression_negative_number(t):
     'expression : MINUS NUMBER'
     t[0] = (-1)*t[2]
@@ -444,11 +466,7 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-function carre(a, b) {
-    return a - b;
-}
-
-x = carre(10, -10);
+x = true;
 print(x);
 '''
 
