@@ -421,6 +421,10 @@ def p_expression_group(t):
 def p_expression_number(t):
     'expression : NUMBER'
     t[0] = t[1]
+    
+def p_expression_negative_number(t):
+    'expression : MINUS NUMBER'
+    t[0] = (-1)*t[2]
 
 def p_expression_name(t):
     'expression : NAME'
@@ -440,12 +444,11 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-function carre(a) {
-    return a*a;
+function carre(a, b) {
+    return a - b;
 }
 
-x = 10;
-x = carre(x);
+x = carre(10, -10);
 print(x);
 '''
 
