@@ -21,34 +21,36 @@ reserved = {
 tokens = [
     'NAME','NUMBER','STRING',
     'PLUS','MINUS','TIMES','DIVIDE', 
-    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA',
+    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA','LSQBRACKET', 'RSQBRACKET',
     'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER', 'HIGHEQUAL', 'LOWEQUAL',
     ] + list(reserved.values())
 
 
 # Tokens
-t_PLUS    = r'\+'
-t_MINUS   = r'-'
-t_TIMES   = r'\*'
-t_DIVIDE  = r'/'
-t_EQUAL   = r'='
-t_LPAREN  = r'\('
-t_RPAREN  = r'\)'
-t_LBRACKET = r'\{'
-t_RBRACKET = r'\}'
-t_COLON   = r';'
-t_COMMA   = r','
-t_AND     = r'\&'
-t_OR      = r'\|'
-t_EQUALS  = r'=='
-t_LOWER   = r'\<'
-t_HIGHER  = r'\>'
+t_PLUS      = r'\+'
+t_MINUS     = r'-'
+t_TIMES     = r'\*'
+t_DIVIDE    = r'/'
+t_EQUAL     = r'='
+t_LPAREN    = r'\('
+t_RPAREN    = r'\)'
+t_LBRACKET  = r'\{'
+t_RBRACKET  = r'\}'
+t_RSQBRACKET = r'\]'
+t_LSQBRACKET = r'\['
+t_COLON     = r';'
+t_COMMA     = r','
+t_AND       = r'\&'
+t_OR        = r'\|'
+t_EQUALS    = r'=='
+t_LOWER     = r'\<'
+t_HIGHER    = r'\>'
 t_HIGHEQUAL = r'\>='
-t_LOWEQUAL = r'\<='
+t_LOWEQUAL  = r'\<='
 
 
 def t_STRING(t):
-    r'\"[^\"]*\"'
+    r'\"[^\"]*\"' 
     t.value = t.value[1:-1]
     return t
 
@@ -66,8 +68,6 @@ def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'NAME')    # Check for reserved words
     return t
-
-
 
 def t_NUMBER(t):
     r'\d+'
@@ -122,7 +122,7 @@ def evalInst(t):
     global current_function
     global current_return_val
     
-    if current_return_val is not None and current_function:
+    if current_return_val and current_function:
         return
     
     print('evalInst', t)
@@ -133,8 +133,7 @@ def evalInst(t):
     if t[0]=='bloc' :
             evalInst(t[1])
             evalInst(t[2])
-    
-    
+                    
     if t[0]=='print' :
         print(evalExpr(t[1]))
         
@@ -171,8 +170,8 @@ def evalInst(t):
     if t[0]=='if' : 
         condition, inst_if, inst_else = t[1], t[2], t[3]
         
-        if(len(t) == 3):
-            if evalExpr(condition):
+        if(len(t) == 3): # if there's not else
+            if evalExpr(condition): 
                 evalInst(inst_if)
         else:
             if evalExpr(condition):
@@ -247,7 +246,10 @@ def evalExpr(t):
         elif t[0] == '/':
             return evalExpr(t[1]) / evalExpr(t[2])
         elif t[0] == '-':
-            return evalExpr(t[1]) - evalExpr(t[2])
+            if len(t) > 2:
+                return evalExpr(t[1]) - evalExpr(t[2])
+            else:
+                return (-1) * evalExpr(t[1])
         # Condition
         elif t[0] == '==':
             return evalExpr(t[1]) == evalExpr(t[2])
@@ -375,7 +377,8 @@ def p_expression_operator(t):
 ############################ FONCTIONS ###################################
 
 def p_statement_return(t):
-    'inst : RETURN expression COLON'
+    '''inst : RETURN expression COLON
+            | RETURN condition COLON'''
     t[0] = ('return', t[2])
    
 # déclarer une fonction 
@@ -425,6 +428,7 @@ def p_expression_params(t):
         param_list.append(new_param)
         t[0] = param_list
     
+    
 def p_statement_print(t):
     'inst : PRINT LPAREN expression RPAREN COLON' 
     t[0] = ('print', t[3])
@@ -454,8 +458,7 @@ def p_expression_group(t):
 def p_expression_number(t):
     'expression : NUMBER'
     t[0] = t[1]
-    
-    
+      
 def p_expression_true(t):
     'expression : TRUE'
     t[0] = True
@@ -464,14 +467,19 @@ def p_expression_false(t):
     'expression : FALSE'
     t[0] = False
     
-def p_expression_negative_number(t):
-    'expression : MINUS NUMBER'
-    t[0] = (-1)*t[2]
-
 def p_expression_name(t):
     'expression : NAME'
     t[0] = t[1]
 
+def p_expression_inverse(t):
+    'expression : MINUS expression'
+    t[0] = ('-', t[2])
+    
+    
+def p_expression_array(t):
+    'array : LSQBRACKET call_params RSQBRACKET'
+    t[0] = ('array', t[2])
+    
     
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
@@ -486,19 +494,23 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-function test(a) {
-    if(a == 1) {
-        return 5;
+function test(a, b, c) {
+    for(i = 0; i < c+1; i++) {
+        a*=b;
     }
-    else if(a == 6) {
-        sprint("test");
-        return 12;
-    }
-    else return 0;
+    return a;
 }
 
-x = test(7);
+
+function test2(a) {
+    return -a + (-10);
+}
+
+
+x = test(2, 5, 8);
+x = test2(10);
 print(x);
+sprint("bonjour clément et benjamin");
 '''
 
    
