@@ -5,6 +5,7 @@ class Color:
              
 reserved = {
    'if'      : 'IF',
+   'else'    : 'ELSE',
    'then'    : 'THEN',
    'print'   : 'PRINT',
    'while'   : 'WHILE',
@@ -18,7 +19,7 @@ reserved = {
 
 
 tokens = [
-    'NAME','NUMBER','STRING','TRUE', 'FALSE',
+    'NAME','NUMBER','STRING',
     'PLUS','MINUS','TIMES','DIVIDE', 
     'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA',
     'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER', 'HIGHEQUAL', 'LOWEQUAL',
@@ -168,8 +169,17 @@ def evalInst(t):
             names[(t[1], scope)] *= evalExpr(t[3])
             
     if t[0]=='if' : 
-        if evalExpr(t[1]):
-            evalInst(t[2])
+        condition, inst_if, inst_else = t[1], t[2], t[3]
+        
+        if(len(t) == 3):
+            if evalExpr(condition):
+                evalInst(inst_if)
+        else:
+            if evalExpr(condition):
+                evalInst(inst_if)
+            else:
+                evalInst(inst_else)   
+        
         
     if t[0]=='while':
         while evalExpr(t[1]):  # condition
@@ -330,8 +340,18 @@ def p_statement_for(t):
 ########################## CONDITIONS #####################################
 
 def p_expression_if(t):
-    'inst : IF LPAREN condition RPAREN b_bloc'
-    t[0] = ('if', t[3], t[5])
+    '''inst : IF LPAREN condition RPAREN b_bloc
+            | IF LPAREN condition RPAREN b_bloc else'''
+    if(len(t) > 6):
+        t[0] = ('if', t[3], t[5], t[6])
+    else:
+        t[0] = ('if', t[3], t[5])
+    
+
+def p_expression_else(t):
+    '''else : ELSE inst
+            | ELSE b_bloc'''
+    t[0] = t[2]
     
     
 def p_expression_condition(t):
@@ -466,7 +486,18 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-x = true;
+function test(a) {
+    if(a == 1) {
+        return 5;
+    }
+    else if(a == 6) {
+        sprint("test");
+        return 12;
+    }
+    else return 0;
+}
+
+x = test(7);
 print(x);
 '''
 
