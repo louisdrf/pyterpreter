@@ -143,13 +143,12 @@ def p_statement_call_function_void(t):
 def p_expression_call_params(t):
     '''call_params : expression COMMA call_params 
                    | expression
-                   | empty_params'''
+                   | '''
     
-    if len(t) == 2:
-        if t[1] == []:
-            t[0] = []
-        else:
-            t[0] = [t[1]]
+    if len(t) == 1:
+        t[0] = []
+    elif len(t) == 2:    
+        t[0] = [t[1]]
     else:
         new_param, param_list = t[1], t[3]
         param_list.append(new_param)
@@ -159,12 +158,11 @@ def p_expression_call_params(t):
 def p_expression_params(t):
     '''params : NAME COMMA params 
               | NAME
-              | empty_params'''
-    if len(t) == 2:
-        if t[1] == []:
-            t[0] = []
-        else:
-            t[0] = [t[1]]
+              | '''
+    if len(t) == 1:
+        t[0] = []
+    elif len(t) == 2:
+        t[0] = [t[1]]
     else:
         new_param, param_list = t[1], t[3]
         param_list.append(new_param)
@@ -225,7 +223,3 @@ def p_expression_array(t):
     
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
- 
-def p_expression_empty_params(t):
-    'empty_params :'
-    t[0] = []   
