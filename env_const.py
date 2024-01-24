@@ -1,8 +1,10 @@
-class Color:
-    BLUE = '\033[94m'
-    RESET = '\033[0m'
-
-names = {}
-functions = {}
-current_function = ""
-current_return_val = None
+class Globals: 
+    
+   def __init__(self):
+        self.names = {}
+        self.functions = {}
+        self.current_function = ""
+        self.current_return_val = None
+        
+        
+globals = Globals()

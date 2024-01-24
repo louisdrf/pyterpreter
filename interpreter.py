@@ -11,7 +11,11 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 s = '''
-print(5);
+function test(a, b, c) {
+    print(12);
+}
+
+x = test(1, 2, 3);
 '''
 
    

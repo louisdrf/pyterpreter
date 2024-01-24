@@ -1,4 +1,4 @@
-from evalInst import evalInst
+from evals import *
 
 # Parsing rules
 precedence = (
