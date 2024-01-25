@@ -5,7 +5,7 @@ precedence = (
     ('left', 'OR', 'AND'),
     ('left', 'EQUALS', 'LOWER', 'HIGHER', 'HIGHEQUAL', 'LOWEQUAL'),
     ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE')
+    ('left', 'TIMES', 'DIVIDE', 'MODULO')
 )
 
 
@@ -118,6 +118,10 @@ def p_expression_operator(t):
 
 ############################ FONCTIONS ###################################
 
+def p_expression_main(t):
+    'inst : MAIN LPAREN RPAREN b_bloc'
+    t[0] = ('main', t[4])
+
 def p_statement_return(t):
     '''inst : RETURN expression COLON
             | RETURN condition COLON'''
@@ -188,7 +192,8 @@ def p_operator(t):
     '''operator : PLUS
                 | MINUS
                 | DIVIDE
-                | TIMES'''
+                | TIMES
+                | MODULO'''
     t[0] = t[1]
 
 def p_expression_group(t):
@@ -215,11 +220,22 @@ def p_expression_inverse(t):
     'expression : MINUS expression'
     t[0] = ('-', t[2])
     
-    
-def p_expression_array(t):
-    'array : LSQBRACKET call_params RSQBRACKET'
-    t[0] = ('array', t[2])
-    
+def p_statement_multiple_assign(t):
+    'inst : params EQUAL multiple_values'
+    t[0] = ('multiple_assign', t[1], t[3])  
+  
+def p_expression_multiple_values(t):
+    '''multiple_values : expression
+                       | expression COMMA multiple_values'''
+    if len(t) == 1:
+        t[0] = []
+    elif len(t) == 2:
+        t[0] = [t[1]]
+    else:
+        new_param, param_list = t[1], t[3]
+        param_list.append(new_param)
+        t[0] = param_list  
+ 
     
 def p_error(t):
     print("Syntax error at '%s'" % t.value)

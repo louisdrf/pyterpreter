@@ -1,10 +1,5 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    MAIN
-    THEN
-
 Grammar
 
 Rule 0     S' -> start
@@ -35,87 +30,89 @@ Rule 24    condition -> expression LOWEQUAL expression
 Rule 25    condition -> expression OR expression
 Rule 26    condition -> expression AND expression
 Rule 27    expression -> expression operator expression
-Rule 28    inst -> RETURN expression COLON
-Rule 29    inst -> RETURN condition COLON
-Rule 30    inst -> FUNCTION NAME LPAREN params RPAREN b_bloc
-Rule 31    expression -> NAME LPAREN call_params RPAREN
-Rule 32    inst -> NAME LPAREN call_params RPAREN COLON
-Rule 33    call_params -> expression COMMA call_params
-Rule 34    call_params -> expression
-Rule 35    call_params -> <empty>
-Rule 36    params -> NAME COMMA params
-Rule 37    params -> NAME
-Rule 38    params -> <empty>
-Rule 39    inst -> PRINT LPAREN expression RPAREN COLON
-Rule 40    inst -> SPRINT LPAREN STRING RPAREN COLON
-Rule 41    b_bloc -> LBRACKET linst RBRACKET
-Rule 42    operator -> PLUS
-Rule 43    operator -> MINUS
-Rule 44    operator -> DIVIDE
-Rule 45    operator -> TIMES
-Rule 46    expression -> LPAREN expression RPAREN
-Rule 47    expression -> NUMBER
-Rule 48    expression -> TRUE
-Rule 49    expression -> FALSE
-Rule 50    expression -> NAME
-Rule 51    expression -> MINUS expression
-Rule 52    array -> LSQBRACKET call_params RSQBRACKET
+Rule 28    inst -> MAIN LPAREN RPAREN b_bloc
+Rule 29    inst -> RETURN expression COLON
+Rule 30    inst -> RETURN condition COLON
+Rule 31    inst -> FUNCTION NAME LPAREN params RPAREN b_bloc
+Rule 32    expression -> NAME LPAREN call_params RPAREN
+Rule 33    inst -> NAME LPAREN call_params RPAREN COLON
+Rule 34    call_params -> expression COMMA call_params
+Rule 35    call_params -> expression
+Rule 36    call_params -> <empty>
+Rule 37    params -> NAME COMMA params
+Rule 38    params -> NAME
+Rule 39    params -> <empty>
+Rule 40    inst -> PRINT LPAREN expression RPAREN COLON
+Rule 41    inst -> SPRINT LPAREN STRING RPAREN COLON
+Rule 42    b_bloc -> LBRACKET linst RBRACKET
+Rule 43    operator -> PLUS
+Rule 44    operator -> MINUS
+Rule 45    operator -> DIVIDE
+Rule 46    operator -> TIMES
+Rule 47    operator -> MODULO
+Rule 48    expression -> LPAREN expression RPAREN
+Rule 49    expression -> NUMBER
+Rule 50    expression -> TRUE
+Rule 51    expression -> FALSE
+Rule 52    expression -> NAME
+Rule 53    expression -> MINUS expression
+Rule 54    inst -> params EQUAL multiple_values
+Rule 55    multiple_values -> expression
+Rule 56    multiple_values -> expression COMMA multiple_values
 
 Terminals, with rules where they appear
 
 AND                  : 26
-COLON                : 4 5 6 10 13 13 14 14 15 15 28 29 32 39 40
-COMMA                : 33 36
-DIVIDE               : 44
+COLON                : 4 5 6 10 13 13 14 14 15 15 29 30 33 40 41
+COMMA                : 34 37 56
+DIVIDE               : 45
 ELSE                 : 18 19
-EQUAL                : 9 11
+EQUAL                : 9 11 54
 EQUALS               : 20
-FALSE                : 49
+FALSE                : 51
 FOR                  : 13 14 15
-FUNCTION             : 30
+FUNCTION             : 31
 HIGHEQUAL            : 23
 HIGHER               : 22
 IF                   : 16 17
-LBRACKET             : 41
+LBRACKET             : 42
 LOWEQUAL             : 24
 LOWER                : 21
-LPAREN               : 12 13 14 15 16 17 30 31 32 39 40 46
-LSQBRACKET           : 52
-MAIN                 : 
-MINUS                : 8 8 43 51
-NAME                 : 7 8 9 11 30 31 32 36 37 50
-NUMBER               : 47
+LPAREN               : 12 13 14 15 16 17 28 31 32 33 40 41 48
+MAIN                 : 28
+MINUS                : 8 8 44 53
+MODULO               : 47
+NAME                 : 7 8 9 11 31 32 33 37 38 52
+NUMBER               : 49
 OR                   : 25
-PLUS                 : 7 7 42
-PRINT                : 39
-RBRACKET             : 41
-RETURN               : 28 29
-RPAREN               : 12 13 14 15 16 17 30 31 32 39 40 46
-RSQBRACKET           : 52
-SPRINT               : 40
-STRING               : 40
-THEN                 : 
-TIMES                : 45
-TRUE                 : 48
+PLUS                 : 7 7 43
+PRINT                : 40
+RBRACKET             : 42
+RETURN               : 29 30
+RPAREN               : 12 13 14 15 16 17 28 31 32 33 40 41 48
+SPRINT               : 41
+STRING               : 41
+TIMES                : 46
+TRUE                 : 50
 WHILE                : 12
 error                : 
 
 Nonterminals, with rules where they appear
 
-array                : 
 assign               : 10 13 14 15
-b_bloc               : 12 13 14 15 16 17 19 30
-call_params          : 31 32 33 52
-condition            : 12 13 14 15 16 17 29
+b_bloc               : 12 13 14 15 16 17 19 28 31
+call_params          : 32 33 34
+condition            : 12 13 14 15 16 17 30
 decrement            : 5 15
 else                 : 17
-expression           : 9 11 20 20 21 21 22 22 23 23 24 24 25 25 26 26 27 27 28 33 34 39 46 51
+expression           : 9 11 20 20 21 21 22 22 23 23 24 24 25 25 26 26 27 27 29 34 35 40 48 53 55 56
 increment            : 4 13
 inst                 : 2 3 18
-linst                : 1 2 41
+linst                : 1 2 42
+multiple_values      : 54 56
 operator             : 9 27
 operator_assign      : 6 14
-params               : 30 36
+params               : 31 37 54
 start                : 0
 
 Parsing method: LALR
@@ -136,25 +133,32 @@ state 0
     (15) inst -> . FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc
     (16) inst -> . IF LPAREN condition RPAREN b_bloc
     (17) inst -> . IF LPAREN condition RPAREN b_bloc else
-    (28) inst -> . RETURN expression COLON
-    (29) inst -> . RETURN condition COLON
-    (30) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
-    (32) inst -> . NAME LPAREN call_params RPAREN COLON
-    (39) inst -> . PRINT LPAREN expression RPAREN COLON
-    (40) inst -> . SPRINT LPAREN STRING RPAREN COLON
+    (28) inst -> . MAIN LPAREN RPAREN b_bloc
+    (29) inst -> . RETURN expression COLON
+    (30) inst -> . RETURN condition COLON
+    (31) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
+    (33) inst -> . NAME LPAREN call_params RPAREN COLON
+    (40) inst -> . PRINT LPAREN expression RPAREN COLON
+    (41) inst -> . SPRINT LPAREN STRING RPAREN COLON
+    (54) inst -> . params EQUAL multiple_values
     (7) increment -> . NAME PLUS PLUS
     (8) decrement -> . NAME MINUS MINUS
     (9) operator_assign -> . NAME operator EQUAL expression
     (11) assign -> . NAME EQUAL expression
+    (37) params -> . NAME COMMA params
+    (38) params -> . NAME
+    (39) params -> .
 
     WHILE           shift and go to state 8
     FOR             shift and go to state 9
     IF              shift and go to state 10
-    RETURN          shift and go to state 11
-    FUNCTION        shift and go to state 12
-    NAME            shift and go to state 13
-    PRINT           shift and go to state 14
-    SPRINT          shift and go to state 15
+    MAIN            shift and go to state 11
+    RETURN          shift and go to state 12
+    FUNCTION        shift and go to state 13
+    NAME            shift and go to state 14
+    PRINT           shift and go to state 16
+    SPRINT          shift and go to state 17
+    EQUAL           reduce using rule 39 (params -> .)
 
     start                          shift and go to state 1
     linst                          shift and go to state 2
@@ -163,6 +167,7 @@ state 0
     decrement                      shift and go to state 5
     operator_assign                shift and go to state 6
     assign                         shift and go to state 7
+    params                         shift and go to state 15
 
 state 1
 
@@ -184,32 +189,40 @@ state 2
     (15) inst -> . FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc
     (16) inst -> . IF LPAREN condition RPAREN b_bloc
     (17) inst -> . IF LPAREN condition RPAREN b_bloc else
-    (28) inst -> . RETURN expression COLON
-    (29) inst -> . RETURN condition COLON
-    (30) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
-    (32) inst -> . NAME LPAREN call_params RPAREN COLON
-    (39) inst -> . PRINT LPAREN expression RPAREN COLON
-    (40) inst -> . SPRINT LPAREN STRING RPAREN COLON
+    (28) inst -> . MAIN LPAREN RPAREN b_bloc
+    (29) inst -> . RETURN expression COLON
+    (30) inst -> . RETURN condition COLON
+    (31) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
+    (33) inst -> . NAME LPAREN call_params RPAREN COLON
+    (40) inst -> . PRINT LPAREN expression RPAREN COLON
+    (41) inst -> . SPRINT LPAREN STRING RPAREN COLON
+    (54) inst -> . params EQUAL multiple_values
     (7) increment -> . NAME PLUS PLUS
     (8) decrement -> . NAME MINUS MINUS
     (9) operator_assign -> . NAME operator EQUAL expression
     (11) assign -> . NAME EQUAL expression
+    (37) params -> . NAME COMMA params
+    (38) params -> . NAME
+    (39) params -> .
 
     $end            reduce using rule 1 (start -> linst .)
     WHILE           shift and go to state 8
     FOR             shift and go to state 9
     IF              shift and go to state 10
-    RETURN          shift and go to state 11
-    FUNCTION        shift and go to state 12
-    NAME            shift and go to state 13
-    PRINT           shift and go to state 14
-    SPRINT          shift and go to state 15
+    MAIN            shift and go to state 11
+    RETURN          shift and go to state 12
+    FUNCTION        shift and go to state 13
+    NAME            shift and go to state 14
+    PRINT           shift and go to state 16
+    SPRINT          shift and go to state 17
+    EQUAL           reduce using rule 39 (params -> .)
 
-    inst                           shift and go to state 16
+    inst                           shift and go to state 18
     increment                      shift and go to state 4
     decrement                      shift and go to state 5
     operator_assign                shift and go to state 6
     assign                         shift and go to state 7
+    params                         shift and go to state 15
 
 state 3
 
@@ -218,11 +231,13 @@ state 3
     WHILE           reduce using rule 3 (linst -> inst .)
     FOR             reduce using rule 3 (linst -> inst .)
     IF              reduce using rule 3 (linst -> inst .)
+    MAIN            reduce using rule 3 (linst -> inst .)
     RETURN          reduce using rule 3 (linst -> inst .)
     FUNCTION        reduce using rule 3 (linst -> inst .)
     NAME            reduce using rule 3 (linst -> inst .)
     PRINT           reduce using rule 3 (linst -> inst .)
     SPRINT          reduce using rule 3 (linst -> inst .)
+    EQUAL           reduce using rule 3 (linst -> inst .)
     $end            reduce using rule 3 (linst -> inst .)
     RBRACKET        reduce using rule 3 (linst -> inst .)
 
@@ -231,35 +246,35 @@ state 4
 
     (4) inst -> increment . COLON
 
-    COLON           shift and go to state 17
+    COLON           shift and go to state 19
 
 
 state 5
 
     (5) inst -> decrement . COLON
 
-    COLON           shift and go to state 18
+    COLON           shift and go to state 20
 
 
 state 6
 
     (6) inst -> operator_assign . COLON
 
-    COLON           shift and go to state 19
+    COLON           shift and go to state 21
 
 
 state 7
 
     (10) inst -> assign . COLON
 
-    COLON           shift and go to state 20
+    COLON           shift and go to state 22
 
 
 state 8
 
     (12) inst -> WHILE . LPAREN condition RPAREN b_bloc
 
-    LPAREN          shift and go to state 21
+    LPAREN          shift and go to state 23
 
 
 state 9
@@ -268,7 +283,7 @@ state 9
     (14) inst -> FOR . LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc
     (15) inst -> FOR . LPAREN assign COLON condition COLON decrement RPAREN b_bloc
 
-    LPAREN          shift and go to state 22
+    LPAREN          shift and go to state 24
 
 
 state 10
@@ -276,21 +291,28 @@ state 10
     (16) inst -> IF . LPAREN condition RPAREN b_bloc
     (17) inst -> IF . LPAREN condition RPAREN b_bloc else
 
-    LPAREN          shift and go to state 23
+    LPAREN          shift and go to state 25
 
 
 state 11
 
-    (28) inst -> RETURN . expression COLON
-    (29) inst -> RETURN . condition COLON
+    (28) inst -> MAIN . LPAREN RPAREN b_bloc
+
+    LPAREN          shift and go to state 26
+
+
+state 12
+
+    (29) inst -> RETURN . expression COLON
+    (30) inst -> RETURN . condition COLON
     (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
     (20) condition -> . expression EQUALS expression
     (21) condition -> . expression LOWER expression
     (22) condition -> . expression HIGHER expression
@@ -299,139 +321,164 @@ state 11
     (25) condition -> . expression OR expression
     (26) condition -> . expression AND expression
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    expression                     shift and go to state 24
-    condition                      shift and go to state 25
-
-state 12
-
-    (30) inst -> FUNCTION . NAME LPAREN params RPAREN b_bloc
-
-    NAME            shift and go to state 32
-
+    expression                     shift and go to state 27
+    condition                      shift and go to state 28
 
 state 13
 
-    (32) inst -> NAME . LPAREN call_params RPAREN COLON
+    (31) inst -> FUNCTION . NAME LPAREN params RPAREN b_bloc
+
+    NAME            shift and go to state 35
+
+
+state 14
+
+    (33) inst -> NAME . LPAREN call_params RPAREN COLON
     (7) increment -> NAME . PLUS PLUS
     (8) decrement -> NAME . MINUS MINUS
     (9) operator_assign -> NAME . operator EQUAL expression
     (11) assign -> NAME . EQUAL expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
+    (37) params -> NAME . COMMA params
+    (38) params -> NAME .
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
 
-    LPAREN          shift and go to state 33
-    PLUS            shift and go to state 34
-    MINUS           shift and go to state 35
-    EQUAL           shift and go to state 37
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
+  ! shift/reduce conflict for EQUAL resolved as shift
+    LPAREN          shift and go to state 36
+    PLUS            shift and go to state 37
+    MINUS           shift and go to state 38
+    EQUAL           shift and go to state 40
+    COMMA           shift and go to state 41
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
 
-    operator                       shift and go to state 36
+  ! EQUAL           [ reduce using rule 38 (params -> NAME .) ]
 
-state 14
-
-    (39) inst -> PRINT . LPAREN expression RPAREN COLON
-
-    LPAREN          shift and go to state 40
-
+    operator                       shift and go to state 39
 
 state 15
 
-    (40) inst -> SPRINT . LPAREN STRING RPAREN COLON
+    (54) inst -> params . EQUAL multiple_values
 
-    LPAREN          shift and go to state 41
+    EQUAL           shift and go to state 45
 
 
 state 16
+
+    (40) inst -> PRINT . LPAREN expression RPAREN COLON
+
+    LPAREN          shift and go to state 46
+
+
+state 17
+
+    (41) inst -> SPRINT . LPAREN STRING RPAREN COLON
+
+    LPAREN          shift and go to state 47
+
+
+state 18
 
     (2) linst -> linst inst .
 
     WHILE           reduce using rule 2 (linst -> linst inst .)
     FOR             reduce using rule 2 (linst -> linst inst .)
     IF              reduce using rule 2 (linst -> linst inst .)
+    MAIN            reduce using rule 2 (linst -> linst inst .)
     RETURN          reduce using rule 2 (linst -> linst inst .)
     FUNCTION        reduce using rule 2 (linst -> linst inst .)
     NAME            reduce using rule 2 (linst -> linst inst .)
     PRINT           reduce using rule 2 (linst -> linst inst .)
     SPRINT          reduce using rule 2 (linst -> linst inst .)
+    EQUAL           reduce using rule 2 (linst -> linst inst .)
     $end            reduce using rule 2 (linst -> linst inst .)
     RBRACKET        reduce using rule 2 (linst -> linst inst .)
 
 
-state 17
+state 19
 
     (4) inst -> increment COLON .
 
     WHILE           reduce using rule 4 (inst -> increment COLON .)
     FOR             reduce using rule 4 (inst -> increment COLON .)
     IF              reduce using rule 4 (inst -> increment COLON .)
+    MAIN            reduce using rule 4 (inst -> increment COLON .)
     RETURN          reduce using rule 4 (inst -> increment COLON .)
     FUNCTION        reduce using rule 4 (inst -> increment COLON .)
     NAME            reduce using rule 4 (inst -> increment COLON .)
     PRINT           reduce using rule 4 (inst -> increment COLON .)
     SPRINT          reduce using rule 4 (inst -> increment COLON .)
+    EQUAL           reduce using rule 4 (inst -> increment COLON .)
     $end            reduce using rule 4 (inst -> increment COLON .)
     RBRACKET        reduce using rule 4 (inst -> increment COLON .)
 
 
-state 18
+state 20
 
     (5) inst -> decrement COLON .
 
     WHILE           reduce using rule 5 (inst -> decrement COLON .)
     FOR             reduce using rule 5 (inst -> decrement COLON .)
     IF              reduce using rule 5 (inst -> decrement COLON .)
+    MAIN            reduce using rule 5 (inst -> decrement COLON .)
     RETURN          reduce using rule 5 (inst -> decrement COLON .)
     FUNCTION        reduce using rule 5 (inst -> decrement COLON .)
     NAME            reduce using rule 5 (inst -> decrement COLON .)
     PRINT           reduce using rule 5 (inst -> decrement COLON .)
     SPRINT          reduce using rule 5 (inst -> decrement COLON .)
+    EQUAL           reduce using rule 5 (inst -> decrement COLON .)
     $end            reduce using rule 5 (inst -> decrement COLON .)
     RBRACKET        reduce using rule 5 (inst -> decrement COLON .)
 
 
-state 19
+state 21
 
     (6) inst -> operator_assign COLON .
 
     WHILE           reduce using rule 6 (inst -> operator_assign COLON .)
     FOR             reduce using rule 6 (inst -> operator_assign COLON .)
     IF              reduce using rule 6 (inst -> operator_assign COLON .)
+    MAIN            reduce using rule 6 (inst -> operator_assign COLON .)
     RETURN          reduce using rule 6 (inst -> operator_assign COLON .)
     FUNCTION        reduce using rule 6 (inst -> operator_assign COLON .)
     NAME            reduce using rule 6 (inst -> operator_assign COLON .)
     PRINT           reduce using rule 6 (inst -> operator_assign COLON .)
     SPRINT          reduce using rule 6 (inst -> operator_assign COLON .)
+    EQUAL           reduce using rule 6 (inst -> operator_assign COLON .)
     $end            reduce using rule 6 (inst -> operator_assign COLON .)
     RBRACKET        reduce using rule 6 (inst -> operator_assign COLON .)
 
 
-state 20
+state 22
 
     (10) inst -> assign COLON .
 
     WHILE           reduce using rule 10 (inst -> assign COLON .)
     FOR             reduce using rule 10 (inst -> assign COLON .)
     IF              reduce using rule 10 (inst -> assign COLON .)
+    MAIN            reduce using rule 10 (inst -> assign COLON .)
     RETURN          reduce using rule 10 (inst -> assign COLON .)
     FUNCTION        reduce using rule 10 (inst -> assign COLON .)
     NAME            reduce using rule 10 (inst -> assign COLON .)
     PRINT           reduce using rule 10 (inst -> assign COLON .)
     SPRINT          reduce using rule 10 (inst -> assign COLON .)
+    EQUAL           reduce using rule 10 (inst -> assign COLON .)
     $end            reduce using rule 10 (inst -> assign COLON .)
     RBRACKET        reduce using rule 10 (inst -> assign COLON .)
 
 
-state 21
+state 23
 
     (12) inst -> WHILE LPAREN . condition RPAREN b_bloc
     (20) condition -> . expression EQUALS expression
@@ -442,36 +489,36 @@ state 21
     (25) condition -> . expression OR expression
     (26) condition -> . expression AND expression
     (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    condition                      shift and go to state 42
-    expression                     shift and go to state 43
+    condition                      shift and go to state 48
+    expression                     shift and go to state 49
 
-state 22
+state 24
 
     (13) inst -> FOR LPAREN . assign COLON condition COLON increment RPAREN b_bloc
     (14) inst -> FOR LPAREN . assign COLON condition COLON operator_assign RPAREN b_bloc
     (15) inst -> FOR LPAREN . assign COLON condition COLON decrement RPAREN b_bloc
     (11) assign -> . NAME EQUAL expression
 
-    NAME            shift and go to state 45
+    NAME            shift and go to state 51
 
-    assign                         shift and go to state 44
+    assign                         shift and go to state 50
 
-state 23
+state 25
 
     (16) inst -> IF LPAREN . condition RPAREN b_bloc
     (17) inst -> IF LPAREN . condition RPAREN b_bloc else
@@ -483,327 +530,438 @@ state 23
     (25) condition -> . expression OR expression
     (26) condition -> . expression AND expression
     (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    condition                      shift and go to state 46
-    expression                     shift and go to state 43
-
-state 24
-
-    (28) inst -> RETURN expression . COLON
-    (27) expression -> expression . operator expression
-    (20) condition -> expression . EQUALS expression
-    (21) condition -> expression . LOWER expression
-    (22) condition -> expression . HIGHER expression
-    (23) condition -> expression . HIGHEQUAL expression
-    (24) condition -> expression . LOWEQUAL expression
-    (25) condition -> expression . OR expression
-    (26) condition -> expression . AND expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-    COLON           shift and go to state 47
-    EQUALS          shift and go to state 49
-    LOWER           shift and go to state 50
-    HIGHER          shift and go to state 51
-    HIGHEQUAL       shift and go to state 52
-    LOWEQUAL        shift and go to state 53
-    OR              shift and go to state 54
-    AND             shift and go to state 55
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-    operator                       shift and go to state 48
-
-state 25
-
-    (29) inst -> RETURN condition . COLON
-
-    COLON           shift and go to state 58
-
+    condition                      shift and go to state 52
+    expression                     shift and go to state 49
 
 state 26
 
-    (31) expression -> NAME . LPAREN call_params RPAREN
-    (50) expression -> NAME .
+    (28) inst -> MAIN LPAREN . RPAREN b_bloc
 
-    LPAREN          shift and go to state 59
-    COLON           reduce using rule 50 (expression -> NAME .)
-    EQUALS          reduce using rule 50 (expression -> NAME .)
-    LOWER           reduce using rule 50 (expression -> NAME .)
-    HIGHER          reduce using rule 50 (expression -> NAME .)
-    HIGHEQUAL       reduce using rule 50 (expression -> NAME .)
-    LOWEQUAL        reduce using rule 50 (expression -> NAME .)
-    OR              reduce using rule 50 (expression -> NAME .)
-    AND             reduce using rule 50 (expression -> NAME .)
-    PLUS            reduce using rule 50 (expression -> NAME .)
-    MINUS           reduce using rule 50 (expression -> NAME .)
-    DIVIDE          reduce using rule 50 (expression -> NAME .)
-    TIMES           reduce using rule 50 (expression -> NAME .)
-    RPAREN          reduce using rule 50 (expression -> NAME .)
-    COMMA           reduce using rule 50 (expression -> NAME .)
+    RPAREN          shift and go to state 53
 
 
 state 27
 
-    (46) expression -> LPAREN . expression RPAREN
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (29) inst -> RETURN expression . COLON
+    (27) expression -> expression . operator expression
+    (20) condition -> expression . EQUALS expression
+    (21) condition -> expression . LOWER expression
+    (22) condition -> expression . HIGHER expression
+    (23) condition -> expression . HIGHEQUAL expression
+    (24) condition -> expression . LOWEQUAL expression
+    (25) condition -> expression . OR expression
+    (26) condition -> expression . AND expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    COLON           shift and go to state 54
+    EQUALS          shift and go to state 56
+    LOWER           shift and go to state 57
+    HIGHER          shift and go to state 58
+    HIGHEQUAL       shift and go to state 59
+    LOWEQUAL        shift and go to state 60
+    OR              shift and go to state 61
+    AND             shift and go to state 62
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
 
-    expression                     shift and go to state 60
+    operator                       shift and go to state 55
 
 state 28
 
-    (47) expression -> NUMBER .
+    (30) inst -> RETURN condition . COLON
 
-    COLON           reduce using rule 47 (expression -> NUMBER .)
-    EQUALS          reduce using rule 47 (expression -> NUMBER .)
-    LOWER           reduce using rule 47 (expression -> NUMBER .)
-    HIGHER          reduce using rule 47 (expression -> NUMBER .)
-    HIGHEQUAL       reduce using rule 47 (expression -> NUMBER .)
-    LOWEQUAL        reduce using rule 47 (expression -> NUMBER .)
-    OR              reduce using rule 47 (expression -> NUMBER .)
-    AND             reduce using rule 47 (expression -> NUMBER .)
-    PLUS            reduce using rule 47 (expression -> NUMBER .)
-    MINUS           reduce using rule 47 (expression -> NUMBER .)
-    DIVIDE          reduce using rule 47 (expression -> NUMBER .)
-    TIMES           reduce using rule 47 (expression -> NUMBER .)
-    RPAREN          reduce using rule 47 (expression -> NUMBER .)
-    COMMA           reduce using rule 47 (expression -> NUMBER .)
+    COLON           shift and go to state 65
 
 
 state 29
 
-    (48) expression -> TRUE .
+    (32) expression -> NAME . LPAREN call_params RPAREN
+    (52) expression -> NAME .
 
-    COLON           reduce using rule 48 (expression -> TRUE .)
-    EQUALS          reduce using rule 48 (expression -> TRUE .)
-    LOWER           reduce using rule 48 (expression -> TRUE .)
-    HIGHER          reduce using rule 48 (expression -> TRUE .)
-    HIGHEQUAL       reduce using rule 48 (expression -> TRUE .)
-    LOWEQUAL        reduce using rule 48 (expression -> TRUE .)
-    OR              reduce using rule 48 (expression -> TRUE .)
-    AND             reduce using rule 48 (expression -> TRUE .)
-    PLUS            reduce using rule 48 (expression -> TRUE .)
-    MINUS           reduce using rule 48 (expression -> TRUE .)
-    DIVIDE          reduce using rule 48 (expression -> TRUE .)
-    TIMES           reduce using rule 48 (expression -> TRUE .)
-    RPAREN          reduce using rule 48 (expression -> TRUE .)
-    COMMA           reduce using rule 48 (expression -> TRUE .)
+    LPAREN          shift and go to state 66
+    COLON           reduce using rule 52 (expression -> NAME .)
+    EQUALS          reduce using rule 52 (expression -> NAME .)
+    LOWER           reduce using rule 52 (expression -> NAME .)
+    HIGHER          reduce using rule 52 (expression -> NAME .)
+    HIGHEQUAL       reduce using rule 52 (expression -> NAME .)
+    LOWEQUAL        reduce using rule 52 (expression -> NAME .)
+    OR              reduce using rule 52 (expression -> NAME .)
+    AND             reduce using rule 52 (expression -> NAME .)
+    PLUS            reduce using rule 52 (expression -> NAME .)
+    MINUS           reduce using rule 52 (expression -> NAME .)
+    DIVIDE          reduce using rule 52 (expression -> NAME .)
+    TIMES           reduce using rule 52 (expression -> NAME .)
+    MODULO          reduce using rule 52 (expression -> NAME .)
+    RPAREN          reduce using rule 52 (expression -> NAME .)
+    COMMA           reduce using rule 52 (expression -> NAME .)
+    WHILE           reduce using rule 52 (expression -> NAME .)
+    FOR             reduce using rule 52 (expression -> NAME .)
+    IF              reduce using rule 52 (expression -> NAME .)
+    MAIN            reduce using rule 52 (expression -> NAME .)
+    RETURN          reduce using rule 52 (expression -> NAME .)
+    FUNCTION        reduce using rule 52 (expression -> NAME .)
+    NAME            reduce using rule 52 (expression -> NAME .)
+    PRINT           reduce using rule 52 (expression -> NAME .)
+    SPRINT          reduce using rule 52 (expression -> NAME .)
+    EQUAL           reduce using rule 52 (expression -> NAME .)
+    $end            reduce using rule 52 (expression -> NAME .)
+    RBRACKET        reduce using rule 52 (expression -> NAME .)
 
 
 state 30
 
-    (49) expression -> FALSE .
+    (48) expression -> LPAREN . expression RPAREN
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    COLON           reduce using rule 49 (expression -> FALSE .)
-    EQUALS          reduce using rule 49 (expression -> FALSE .)
-    LOWER           reduce using rule 49 (expression -> FALSE .)
-    HIGHER          reduce using rule 49 (expression -> FALSE .)
-    HIGHEQUAL       reduce using rule 49 (expression -> FALSE .)
-    LOWEQUAL        reduce using rule 49 (expression -> FALSE .)
-    OR              reduce using rule 49 (expression -> FALSE .)
-    AND             reduce using rule 49 (expression -> FALSE .)
-    PLUS            reduce using rule 49 (expression -> FALSE .)
-    MINUS           reduce using rule 49 (expression -> FALSE .)
-    DIVIDE          reduce using rule 49 (expression -> FALSE .)
-    TIMES           reduce using rule 49 (expression -> FALSE .)
-    RPAREN          reduce using rule 49 (expression -> FALSE .)
-    COMMA           reduce using rule 49 (expression -> FALSE .)
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
+    expression                     shift and go to state 67
 
 state 31
 
-    (51) expression -> MINUS . expression
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (49) expression -> NUMBER .
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    COLON           reduce using rule 49 (expression -> NUMBER .)
+    EQUALS          reduce using rule 49 (expression -> NUMBER .)
+    LOWER           reduce using rule 49 (expression -> NUMBER .)
+    HIGHER          reduce using rule 49 (expression -> NUMBER .)
+    HIGHEQUAL       reduce using rule 49 (expression -> NUMBER .)
+    LOWEQUAL        reduce using rule 49 (expression -> NUMBER .)
+    OR              reduce using rule 49 (expression -> NUMBER .)
+    AND             reduce using rule 49 (expression -> NUMBER .)
+    PLUS            reduce using rule 49 (expression -> NUMBER .)
+    MINUS           reduce using rule 49 (expression -> NUMBER .)
+    DIVIDE          reduce using rule 49 (expression -> NUMBER .)
+    TIMES           reduce using rule 49 (expression -> NUMBER .)
+    MODULO          reduce using rule 49 (expression -> NUMBER .)
+    RPAREN          reduce using rule 49 (expression -> NUMBER .)
+    COMMA           reduce using rule 49 (expression -> NUMBER .)
+    WHILE           reduce using rule 49 (expression -> NUMBER .)
+    FOR             reduce using rule 49 (expression -> NUMBER .)
+    IF              reduce using rule 49 (expression -> NUMBER .)
+    MAIN            reduce using rule 49 (expression -> NUMBER .)
+    RETURN          reduce using rule 49 (expression -> NUMBER .)
+    FUNCTION        reduce using rule 49 (expression -> NUMBER .)
+    NAME            reduce using rule 49 (expression -> NUMBER .)
+    PRINT           reduce using rule 49 (expression -> NUMBER .)
+    SPRINT          reduce using rule 49 (expression -> NUMBER .)
+    EQUAL           reduce using rule 49 (expression -> NUMBER .)
+    $end            reduce using rule 49 (expression -> NUMBER .)
+    RBRACKET        reduce using rule 49 (expression -> NUMBER .)
 
-    expression                     shift and go to state 61
 
 state 32
 
-    (30) inst -> FUNCTION NAME . LPAREN params RPAREN b_bloc
+    (50) expression -> TRUE .
 
-    LPAREN          shift and go to state 62
+    COLON           reduce using rule 50 (expression -> TRUE .)
+    EQUALS          reduce using rule 50 (expression -> TRUE .)
+    LOWER           reduce using rule 50 (expression -> TRUE .)
+    HIGHER          reduce using rule 50 (expression -> TRUE .)
+    HIGHEQUAL       reduce using rule 50 (expression -> TRUE .)
+    LOWEQUAL        reduce using rule 50 (expression -> TRUE .)
+    OR              reduce using rule 50 (expression -> TRUE .)
+    AND             reduce using rule 50 (expression -> TRUE .)
+    PLUS            reduce using rule 50 (expression -> TRUE .)
+    MINUS           reduce using rule 50 (expression -> TRUE .)
+    DIVIDE          reduce using rule 50 (expression -> TRUE .)
+    TIMES           reduce using rule 50 (expression -> TRUE .)
+    MODULO          reduce using rule 50 (expression -> TRUE .)
+    RPAREN          reduce using rule 50 (expression -> TRUE .)
+    COMMA           reduce using rule 50 (expression -> TRUE .)
+    WHILE           reduce using rule 50 (expression -> TRUE .)
+    FOR             reduce using rule 50 (expression -> TRUE .)
+    IF              reduce using rule 50 (expression -> TRUE .)
+    MAIN            reduce using rule 50 (expression -> TRUE .)
+    RETURN          reduce using rule 50 (expression -> TRUE .)
+    FUNCTION        reduce using rule 50 (expression -> TRUE .)
+    NAME            reduce using rule 50 (expression -> TRUE .)
+    PRINT           reduce using rule 50 (expression -> TRUE .)
+    SPRINT          reduce using rule 50 (expression -> TRUE .)
+    EQUAL           reduce using rule 50 (expression -> TRUE .)
+    $end            reduce using rule 50 (expression -> TRUE .)
+    RBRACKET        reduce using rule 50 (expression -> TRUE .)
 
 
 state 33
 
-    (32) inst -> NAME LPAREN . call_params RPAREN COLON
-    (33) call_params -> . expression COMMA call_params
-    (34) call_params -> . expression
-    (35) call_params -> .
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (51) expression -> FALSE .
 
-    RPAREN          reduce using rule 35 (call_params -> .)
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    COLON           reduce using rule 51 (expression -> FALSE .)
+    EQUALS          reduce using rule 51 (expression -> FALSE .)
+    LOWER           reduce using rule 51 (expression -> FALSE .)
+    HIGHER          reduce using rule 51 (expression -> FALSE .)
+    HIGHEQUAL       reduce using rule 51 (expression -> FALSE .)
+    LOWEQUAL        reduce using rule 51 (expression -> FALSE .)
+    OR              reduce using rule 51 (expression -> FALSE .)
+    AND             reduce using rule 51 (expression -> FALSE .)
+    PLUS            reduce using rule 51 (expression -> FALSE .)
+    MINUS           reduce using rule 51 (expression -> FALSE .)
+    DIVIDE          reduce using rule 51 (expression -> FALSE .)
+    TIMES           reduce using rule 51 (expression -> FALSE .)
+    MODULO          reduce using rule 51 (expression -> FALSE .)
+    RPAREN          reduce using rule 51 (expression -> FALSE .)
+    COMMA           reduce using rule 51 (expression -> FALSE .)
+    WHILE           reduce using rule 51 (expression -> FALSE .)
+    FOR             reduce using rule 51 (expression -> FALSE .)
+    IF              reduce using rule 51 (expression -> FALSE .)
+    MAIN            reduce using rule 51 (expression -> FALSE .)
+    RETURN          reduce using rule 51 (expression -> FALSE .)
+    FUNCTION        reduce using rule 51 (expression -> FALSE .)
+    NAME            reduce using rule 51 (expression -> FALSE .)
+    PRINT           reduce using rule 51 (expression -> FALSE .)
+    SPRINT          reduce using rule 51 (expression -> FALSE .)
+    EQUAL           reduce using rule 51 (expression -> FALSE .)
+    $end            reduce using rule 51 (expression -> FALSE .)
+    RBRACKET        reduce using rule 51 (expression -> FALSE .)
 
-    call_params                    shift and go to state 63
-    expression                     shift and go to state 64
 
 state 34
 
-    (7) increment -> NAME PLUS . PLUS
-    (42) operator -> PLUS .
+    (53) expression -> MINUS . expression
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    PLUS            shift and go to state 65
-    EQUAL           reduce using rule 42 (operator -> PLUS .)
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
+    expression                     shift and go to state 68
 
 state 35
 
-    (8) decrement -> NAME MINUS . MINUS
-    (43) operator -> MINUS .
+    (31) inst -> FUNCTION NAME . LPAREN params RPAREN b_bloc
 
-    MINUS           shift and go to state 66
-    EQUAL           reduce using rule 43 (operator -> MINUS .)
+    LPAREN          shift and go to state 69
 
 
 state 36
 
-    (9) operator_assign -> NAME operator . EQUAL expression
+    (33) inst -> NAME LPAREN . call_params RPAREN COLON
+    (34) call_params -> . expression COMMA call_params
+    (35) call_params -> . expression
+    (36) call_params -> .
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    EQUAL           shift and go to state 67
+    RPAREN          reduce using rule 36 (call_params -> .)
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
+    call_params                    shift and go to state 70
+    expression                     shift and go to state 71
 
 state 37
 
-    (11) assign -> NAME EQUAL . expression
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (7) increment -> NAME PLUS . PLUS
+    (43) operator -> PLUS .
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    PLUS            shift and go to state 72
+    EQUAL           reduce using rule 43 (operator -> PLUS .)
 
-    expression                     shift and go to state 68
 
 state 38
 
-    (44) operator -> DIVIDE .
+    (8) decrement -> NAME MINUS . MINUS
+    (44) operator -> MINUS .
 
-    EQUAL           reduce using rule 44 (operator -> DIVIDE .)
-    NAME            reduce using rule 44 (operator -> DIVIDE .)
-    LPAREN          reduce using rule 44 (operator -> DIVIDE .)
-    NUMBER          reduce using rule 44 (operator -> DIVIDE .)
-    TRUE            reduce using rule 44 (operator -> DIVIDE .)
-    FALSE           reduce using rule 44 (operator -> DIVIDE .)
-    MINUS           reduce using rule 44 (operator -> DIVIDE .)
+    MINUS           shift and go to state 73
+    EQUAL           reduce using rule 44 (operator -> MINUS .)
 
 
 state 39
 
-    (45) operator -> TIMES .
+    (9) operator_assign -> NAME operator . EQUAL expression
 
-    EQUAL           reduce using rule 45 (operator -> TIMES .)
-    NAME            reduce using rule 45 (operator -> TIMES .)
-    LPAREN          reduce using rule 45 (operator -> TIMES .)
-    NUMBER          reduce using rule 45 (operator -> TIMES .)
-    TRUE            reduce using rule 45 (operator -> TIMES .)
-    FALSE           reduce using rule 45 (operator -> TIMES .)
-    MINUS           reduce using rule 45 (operator -> TIMES .)
+    EQUAL           shift and go to state 74
 
 
 state 40
 
-    (39) inst -> PRINT LPAREN . expression RPAREN COLON
+    (11) assign -> NAME EQUAL . expression
     (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    expression                     shift and go to state 69
+    expression                     shift and go to state 75
 
 state 41
 
-    (40) inst -> SPRINT LPAREN . STRING RPAREN COLON
+    (37) params -> NAME COMMA . params
+    (37) params -> . NAME COMMA params
+    (38) params -> . NAME
+    (39) params -> .
 
-    STRING          shift and go to state 70
+    NAME            shift and go to state 76
+    EQUAL           reduce using rule 39 (params -> .)
+    RPAREN          reduce using rule 39 (params -> .)
 
+    params                         shift and go to state 77
 
 state 42
 
-    (12) inst -> WHILE LPAREN condition . RPAREN b_bloc
+    (45) operator -> DIVIDE .
 
-    RPAREN          shift and go to state 71
+    EQUAL           reduce using rule 45 (operator -> DIVIDE .)
+    NAME            reduce using rule 45 (operator -> DIVIDE .)
+    LPAREN          reduce using rule 45 (operator -> DIVIDE .)
+    NUMBER          reduce using rule 45 (operator -> DIVIDE .)
+    TRUE            reduce using rule 45 (operator -> DIVIDE .)
+    FALSE           reduce using rule 45 (operator -> DIVIDE .)
+    MINUS           reduce using rule 45 (operator -> DIVIDE .)
 
 
 state 43
+
+    (46) operator -> TIMES .
+
+    EQUAL           reduce using rule 46 (operator -> TIMES .)
+    NAME            reduce using rule 46 (operator -> TIMES .)
+    LPAREN          reduce using rule 46 (operator -> TIMES .)
+    NUMBER          reduce using rule 46 (operator -> TIMES .)
+    TRUE            reduce using rule 46 (operator -> TIMES .)
+    FALSE           reduce using rule 46 (operator -> TIMES .)
+    MINUS           reduce using rule 46 (operator -> TIMES .)
+
+
+state 44
+
+    (47) operator -> MODULO .
+
+    EQUAL           reduce using rule 47 (operator -> MODULO .)
+    NAME            reduce using rule 47 (operator -> MODULO .)
+    LPAREN          reduce using rule 47 (operator -> MODULO .)
+    NUMBER          reduce using rule 47 (operator -> MODULO .)
+    TRUE            reduce using rule 47 (operator -> MODULO .)
+    FALSE           reduce using rule 47 (operator -> MODULO .)
+    MINUS           reduce using rule 47 (operator -> MODULO .)
+
+
+state 45
+
+    (54) inst -> params EQUAL . multiple_values
+    (55) multiple_values -> . expression
+    (56) multiple_values -> . expression COMMA multiple_values
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
+
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
+
+    multiple_values                shift and go to state 78
+    expression                     shift and go to state 79
+
+state 46
+
+    (40) inst -> PRINT LPAREN . expression RPAREN COLON
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
+
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
+
+    expression                     shift and go to state 80
+
+state 47
+
+    (41) inst -> SPRINT LPAREN . STRING RPAREN COLON
+
+    STRING          shift and go to state 81
+
+
+state 48
+
+    (12) inst -> WHILE LPAREN condition . RPAREN b_bloc
+
+    RPAREN          shift and go to state 82
+
+
+state 49
 
     (20) condition -> expression . EQUALS expression
     (21) condition -> expression . LOWER expression
@@ -813,386 +971,420 @@ state 43
     (25) condition -> expression . OR expression
     (26) condition -> expression . AND expression
     (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
 
-    EQUALS          shift and go to state 49
-    LOWER           shift and go to state 50
-    HIGHER          shift and go to state 51
-    HIGHEQUAL       shift and go to state 52
-    LOWEQUAL        shift and go to state 53
-    OR              shift and go to state 54
-    AND             shift and go to state 55
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
+    EQUALS          shift and go to state 56
+    LOWER           shift and go to state 57
+    HIGHER          shift and go to state 58
+    HIGHEQUAL       shift and go to state 59
+    LOWEQUAL        shift and go to state 60
+    OR              shift and go to state 61
+    AND             shift and go to state 62
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
 
-    operator                       shift and go to state 48
+    operator                       shift and go to state 55
 
-state 44
+state 50
 
     (13) inst -> FOR LPAREN assign . COLON condition COLON increment RPAREN b_bloc
     (14) inst -> FOR LPAREN assign . COLON condition COLON operator_assign RPAREN b_bloc
     (15) inst -> FOR LPAREN assign . COLON condition COLON decrement RPAREN b_bloc
 
-    COLON           shift and go to state 72
+    COLON           shift and go to state 83
 
 
-state 45
+state 51
 
     (11) assign -> NAME . EQUAL expression
 
-    EQUAL           shift and go to state 37
+    EQUAL           shift and go to state 40
 
 
-state 46
+state 52
 
     (16) inst -> IF LPAREN condition . RPAREN b_bloc
     (17) inst -> IF LPAREN condition . RPAREN b_bloc else
 
-    RPAREN          shift and go to state 73
+    RPAREN          shift and go to state 84
 
-
-state 47
-
-    (28) inst -> RETURN expression COLON .
-
-    WHILE           reduce using rule 28 (inst -> RETURN expression COLON .)
-    FOR             reduce using rule 28 (inst -> RETURN expression COLON .)
-    IF              reduce using rule 28 (inst -> RETURN expression COLON .)
-    RETURN          reduce using rule 28 (inst -> RETURN expression COLON .)
-    FUNCTION        reduce using rule 28 (inst -> RETURN expression COLON .)
-    NAME            reduce using rule 28 (inst -> RETURN expression COLON .)
-    PRINT           reduce using rule 28 (inst -> RETURN expression COLON .)
-    SPRINT          reduce using rule 28 (inst -> RETURN expression COLON .)
-    $end            reduce using rule 28 (inst -> RETURN expression COLON .)
-    RBRACKET        reduce using rule 28 (inst -> RETURN expression COLON .)
-
-
-state 48
-
-    (27) expression -> expression operator . expression
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
-
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
-
-    expression                     shift and go to state 74
-
-state 49
-
-    (20) condition -> expression EQUALS . expression
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
-
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
-
-    expression                     shift and go to state 75
-
-state 50
-
-    (21) condition -> expression LOWER . expression
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
-
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
-
-    expression                     shift and go to state 76
-
-state 51
-
-    (22) condition -> expression HIGHER . expression
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
-
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
-
-    expression                     shift and go to state 77
-
-state 52
-
-    (23) condition -> expression HIGHEQUAL . expression
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
-
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
-
-    expression                     shift and go to state 78
 
 state 53
 
-    (24) condition -> expression LOWEQUAL . expression
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (28) inst -> MAIN LPAREN RPAREN . b_bloc
+    (42) b_bloc -> . LBRACKET linst RBRACKET
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    LBRACKET        shift and go to state 86
 
-    expression                     shift and go to state 79
+    b_bloc                         shift and go to state 85
 
 state 54
 
-    (25) condition -> expression OR . expression
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (29) inst -> RETURN expression COLON .
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    WHILE           reduce using rule 29 (inst -> RETURN expression COLON .)
+    FOR             reduce using rule 29 (inst -> RETURN expression COLON .)
+    IF              reduce using rule 29 (inst -> RETURN expression COLON .)
+    MAIN            reduce using rule 29 (inst -> RETURN expression COLON .)
+    RETURN          reduce using rule 29 (inst -> RETURN expression COLON .)
+    FUNCTION        reduce using rule 29 (inst -> RETURN expression COLON .)
+    NAME            reduce using rule 29 (inst -> RETURN expression COLON .)
+    PRINT           reduce using rule 29 (inst -> RETURN expression COLON .)
+    SPRINT          reduce using rule 29 (inst -> RETURN expression COLON .)
+    EQUAL           reduce using rule 29 (inst -> RETURN expression COLON .)
+    $end            reduce using rule 29 (inst -> RETURN expression COLON .)
+    RBRACKET        reduce using rule 29 (inst -> RETURN expression COLON .)
 
-    expression                     shift and go to state 80
 
 state 55
 
-    (26) condition -> expression AND . expression
+    (27) expression -> expression operator . expression
     (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    expression                     shift and go to state 81
+    expression                     shift and go to state 87
 
 state 56
 
-    (42) operator -> PLUS .
+    (20) condition -> expression EQUALS . expression
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    NAME            reduce using rule 42 (operator -> PLUS .)
-    LPAREN          reduce using rule 42 (operator -> PLUS .)
-    NUMBER          reduce using rule 42 (operator -> PLUS .)
-    TRUE            reduce using rule 42 (operator -> PLUS .)
-    FALSE           reduce using rule 42 (operator -> PLUS .)
-    MINUS           reduce using rule 42 (operator -> PLUS .)
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
+    expression                     shift and go to state 88
 
 state 57
 
-    (43) operator -> MINUS .
+    (21) condition -> expression LOWER . expression
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    NAME            reduce using rule 43 (operator -> MINUS .)
-    LPAREN          reduce using rule 43 (operator -> MINUS .)
-    NUMBER          reduce using rule 43 (operator -> MINUS .)
-    TRUE            reduce using rule 43 (operator -> MINUS .)
-    FALSE           reduce using rule 43 (operator -> MINUS .)
-    MINUS           reduce using rule 43 (operator -> MINUS .)
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
+    expression                     shift and go to state 89
 
 state 58
 
-    (29) inst -> RETURN condition COLON .
+    (22) condition -> expression HIGHER . expression
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    WHILE           reduce using rule 29 (inst -> RETURN condition COLON .)
-    FOR             reduce using rule 29 (inst -> RETURN condition COLON .)
-    IF              reduce using rule 29 (inst -> RETURN condition COLON .)
-    RETURN          reduce using rule 29 (inst -> RETURN condition COLON .)
-    FUNCTION        reduce using rule 29 (inst -> RETURN condition COLON .)
-    NAME            reduce using rule 29 (inst -> RETURN condition COLON .)
-    PRINT           reduce using rule 29 (inst -> RETURN condition COLON .)
-    SPRINT          reduce using rule 29 (inst -> RETURN condition COLON .)
-    $end            reduce using rule 29 (inst -> RETURN condition COLON .)
-    RBRACKET        reduce using rule 29 (inst -> RETURN condition COLON .)
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
+    expression                     shift and go to state 90
 
 state 59
 
-    (31) expression -> NAME LPAREN . call_params RPAREN
-    (33) call_params -> . expression COMMA call_params
-    (34) call_params -> . expression
-    (35) call_params -> .
+    (23) condition -> expression HIGHEQUAL . expression
     (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    RPAREN          reduce using rule 35 (call_params -> .)
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    call_params                    shift and go to state 82
-    expression                     shift and go to state 64
+    expression                     shift and go to state 91
 
 state 60
 
-    (46) expression -> LPAREN expression . RPAREN
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
+    (24) condition -> expression LOWEQUAL . expression
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    RPAREN          shift and go to state 83
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    operator                       shift and go to state 48
+    expression                     shift and go to state 92
 
 state 61
 
-    (51) expression -> MINUS expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
+    (25) condition -> expression OR . expression
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    COLON           reduce using rule 51 (expression -> MINUS expression .)
-    EQUALS          reduce using rule 51 (expression -> MINUS expression .)
-    LOWER           reduce using rule 51 (expression -> MINUS expression .)
-    HIGHER          reduce using rule 51 (expression -> MINUS expression .)
-    HIGHEQUAL       reduce using rule 51 (expression -> MINUS expression .)
-    LOWEQUAL        reduce using rule 51 (expression -> MINUS expression .)
-    OR              reduce using rule 51 (expression -> MINUS expression .)
-    AND             reduce using rule 51 (expression -> MINUS expression .)
-    PLUS            reduce using rule 51 (expression -> MINUS expression .)
-    MINUS           reduce using rule 51 (expression -> MINUS expression .)
-    RPAREN          reduce using rule 51 (expression -> MINUS expression .)
-    COMMA           reduce using rule 51 (expression -> MINUS expression .)
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-  ! DIVIDE          [ reduce using rule 51 (expression -> MINUS expression .) ]
-  ! TIMES           [ reduce using rule 51 (expression -> MINUS expression .) ]
-  ! PLUS            [ shift and go to state 56 ]
-  ! MINUS           [ shift and go to state 57 ]
-
-    operator                       shift and go to state 48
+    expression                     shift and go to state 93
 
 state 62
 
-    (30) inst -> FUNCTION NAME LPAREN . params RPAREN b_bloc
-    (36) params -> . NAME COMMA params
-    (37) params -> . NAME
-    (38) params -> .
+    (26) condition -> expression AND . expression
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    NAME            shift and go to state 84
-    RPAREN          reduce using rule 38 (params -> .)
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    params                         shift and go to state 85
+    expression                     shift and go to state 94
 
 state 63
 
-    (32) inst -> NAME LPAREN call_params . RPAREN COLON
+    (43) operator -> PLUS .
 
-    RPAREN          shift and go to state 86
+    NAME            reduce using rule 43 (operator -> PLUS .)
+    LPAREN          reduce using rule 43 (operator -> PLUS .)
+    NUMBER          reduce using rule 43 (operator -> PLUS .)
+    TRUE            reduce using rule 43 (operator -> PLUS .)
+    FALSE           reduce using rule 43 (operator -> PLUS .)
+    MINUS           reduce using rule 43 (operator -> PLUS .)
 
 
 state 64
 
-    (33) call_params -> expression . COMMA call_params
-    (34) call_params -> expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
+    (44) operator -> MINUS .
 
-    COMMA           shift and go to state 87
-    RPAREN          reduce using rule 34 (call_params -> expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
+    NAME            reduce using rule 44 (operator -> MINUS .)
+    LPAREN          reduce using rule 44 (operator -> MINUS .)
+    NUMBER          reduce using rule 44 (operator -> MINUS .)
+    TRUE            reduce using rule 44 (operator -> MINUS .)
+    FALSE           reduce using rule 44 (operator -> MINUS .)
+    MINUS           reduce using rule 44 (operator -> MINUS .)
 
-    operator                       shift and go to state 48
 
 state 65
+
+    (30) inst -> RETURN condition COLON .
+
+    WHILE           reduce using rule 30 (inst -> RETURN condition COLON .)
+    FOR             reduce using rule 30 (inst -> RETURN condition COLON .)
+    IF              reduce using rule 30 (inst -> RETURN condition COLON .)
+    MAIN            reduce using rule 30 (inst -> RETURN condition COLON .)
+    RETURN          reduce using rule 30 (inst -> RETURN condition COLON .)
+    FUNCTION        reduce using rule 30 (inst -> RETURN condition COLON .)
+    NAME            reduce using rule 30 (inst -> RETURN condition COLON .)
+    PRINT           reduce using rule 30 (inst -> RETURN condition COLON .)
+    SPRINT          reduce using rule 30 (inst -> RETURN condition COLON .)
+    EQUAL           reduce using rule 30 (inst -> RETURN condition COLON .)
+    $end            reduce using rule 30 (inst -> RETURN condition COLON .)
+    RBRACKET        reduce using rule 30 (inst -> RETURN condition COLON .)
+
+
+state 66
+
+    (32) expression -> NAME LPAREN . call_params RPAREN
+    (34) call_params -> . expression COMMA call_params
+    (35) call_params -> . expression
+    (36) call_params -> .
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
+
+    RPAREN          reduce using rule 36 (call_params -> .)
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
+
+    call_params                    shift and go to state 95
+    expression                     shift and go to state 71
+
+state 67
+
+    (48) expression -> LPAREN expression . RPAREN
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    RPAREN          shift and go to state 96
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 68
+
+    (53) expression -> MINUS expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COLON           reduce using rule 53 (expression -> MINUS expression .)
+    EQUALS          reduce using rule 53 (expression -> MINUS expression .)
+    LOWER           reduce using rule 53 (expression -> MINUS expression .)
+    HIGHER          reduce using rule 53 (expression -> MINUS expression .)
+    HIGHEQUAL       reduce using rule 53 (expression -> MINUS expression .)
+    LOWEQUAL        reduce using rule 53 (expression -> MINUS expression .)
+    OR              reduce using rule 53 (expression -> MINUS expression .)
+    AND             reduce using rule 53 (expression -> MINUS expression .)
+    PLUS            reduce using rule 53 (expression -> MINUS expression .)
+    MINUS           reduce using rule 53 (expression -> MINUS expression .)
+    RPAREN          reduce using rule 53 (expression -> MINUS expression .)
+    COMMA           reduce using rule 53 (expression -> MINUS expression .)
+    WHILE           reduce using rule 53 (expression -> MINUS expression .)
+    FOR             reduce using rule 53 (expression -> MINUS expression .)
+    IF              reduce using rule 53 (expression -> MINUS expression .)
+    MAIN            reduce using rule 53 (expression -> MINUS expression .)
+    RETURN          reduce using rule 53 (expression -> MINUS expression .)
+    FUNCTION        reduce using rule 53 (expression -> MINUS expression .)
+    NAME            reduce using rule 53 (expression -> MINUS expression .)
+    PRINT           reduce using rule 53 (expression -> MINUS expression .)
+    SPRINT          reduce using rule 53 (expression -> MINUS expression .)
+    EQUAL           reduce using rule 53 (expression -> MINUS expression .)
+    $end            reduce using rule 53 (expression -> MINUS expression .)
+    RBRACKET        reduce using rule 53 (expression -> MINUS expression .)
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+  ! DIVIDE          [ reduce using rule 53 (expression -> MINUS expression .) ]
+  ! TIMES           [ reduce using rule 53 (expression -> MINUS expression .) ]
+  ! MODULO          [ reduce using rule 53 (expression -> MINUS expression .) ]
+  ! PLUS            [ shift and go to state 63 ]
+  ! MINUS           [ shift and go to state 64 ]
+
+    operator                       shift and go to state 55
+
+state 69
+
+    (31) inst -> FUNCTION NAME LPAREN . params RPAREN b_bloc
+    (37) params -> . NAME COMMA params
+    (38) params -> . NAME
+    (39) params -> .
+
+    NAME            shift and go to state 76
+    RPAREN          reduce using rule 39 (params -> .)
+
+    params                         shift and go to state 97
+
+state 70
+
+    (33) inst -> NAME LPAREN call_params . RPAREN COLON
+
+    RPAREN          shift and go to state 98
+
+
+state 71
+
+    (34) call_params -> expression . COMMA call_params
+    (35) call_params -> expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COMMA           shift and go to state 99
+    RPAREN          reduce using rule 35 (call_params -> expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 72
 
     (7) increment -> NAME PLUS PLUS .
 
@@ -1200,7 +1392,7 @@ state 65
     RPAREN          reduce using rule 7 (increment -> NAME PLUS PLUS .)
 
 
-state 66
+state 73
 
     (8) decrement -> NAME MINUS MINUS .
 
@@ -1208,78 +1400,150 @@ state 66
     RPAREN          reduce using rule 8 (decrement -> NAME MINUS MINUS .)
 
 
-state 67
+state 74
 
     (9) operator_assign -> NAME operator EQUAL . expression
     (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    expression                     shift and go to state 88
+    expression                     shift and go to state 100
 
-state 68
+state 75
 
     (11) assign -> NAME EQUAL expression .
     (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
 
     COLON           reduce using rule 11 (assign -> NAME EQUAL expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
 
-    operator                       shift and go to state 48
+    operator                       shift and go to state 55
 
-state 69
+state 76
 
-    (39) inst -> PRINT LPAREN expression . RPAREN COLON
+    (37) params -> NAME . COMMA params
+    (38) params -> NAME .
+
+    COMMA           shift and go to state 41
+    EQUAL           reduce using rule 38 (params -> NAME .)
+    RPAREN          reduce using rule 38 (params -> NAME .)
+
+
+state 77
+
+    (37) params -> NAME COMMA params .
+
+    EQUAL           reduce using rule 37 (params -> NAME COMMA params .)
+    RPAREN          reduce using rule 37 (params -> NAME COMMA params .)
+
+
+state 78
+
+    (54) inst -> params EQUAL multiple_values .
+
+    WHILE           reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    FOR             reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    IF              reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    MAIN            reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    RETURN          reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    FUNCTION        reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    NAME            reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    PRINT           reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    SPRINT          reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    EQUAL           reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    $end            reduce using rule 54 (inst -> params EQUAL multiple_values .)
+    RBRACKET        reduce using rule 54 (inst -> params EQUAL multiple_values .)
+
+
+state 79
+
+    (55) multiple_values -> expression .
+    (56) multiple_values -> expression . COMMA multiple_values
     (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
 
-    RPAREN          shift and go to state 89
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
+    WHILE           reduce using rule 55 (multiple_values -> expression .)
+    FOR             reduce using rule 55 (multiple_values -> expression .)
+    IF              reduce using rule 55 (multiple_values -> expression .)
+    MAIN            reduce using rule 55 (multiple_values -> expression .)
+    RETURN          reduce using rule 55 (multiple_values -> expression .)
+    FUNCTION        reduce using rule 55 (multiple_values -> expression .)
+    NAME            reduce using rule 55 (multiple_values -> expression .)
+    PRINT           reduce using rule 55 (multiple_values -> expression .)
+    SPRINT          reduce using rule 55 (multiple_values -> expression .)
+    EQUAL           reduce using rule 55 (multiple_values -> expression .)
+    $end            reduce using rule 55 (multiple_values -> expression .)
+    RBRACKET        reduce using rule 55 (multiple_values -> expression .)
+    COMMA           shift and go to state 101
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
 
-    operator                       shift and go to state 48
+    operator                       shift and go to state 55
 
-state 70
+state 80
 
-    (40) inst -> SPRINT LPAREN STRING . RPAREN COLON
+    (40) inst -> PRINT LPAREN expression . RPAREN COLON
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
 
-    RPAREN          shift and go to state 90
+    RPAREN          shift and go to state 102
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 81
+
+    (41) inst -> SPRINT LPAREN STRING . RPAREN COLON
+
+    RPAREN          shift and go to state 103
 
 
-state 71
+state 82
 
     (12) inst -> WHILE LPAREN condition RPAREN . b_bloc
-    (41) b_bloc -> . LBRACKET linst RBRACKET
+    (42) b_bloc -> . LBRACKET linst RBRACKET
 
-    LBRACKET        shift and go to state 92
+    LBRACKET        shift and go to state 86
 
-    b_bloc                         shift and go to state 91
+    b_bloc                         shift and go to state 104
 
-state 72
+state 83
 
     (13) inst -> FOR LPAREN assign COLON . condition COLON increment RPAREN b_bloc
     (14) inst -> FOR LPAREN assign COLON . condition COLON operator_assign RPAREN b_bloc
@@ -1292,322 +1556,55 @@ state 72
     (25) condition -> . expression OR expression
     (26) condition -> . expression AND expression
     (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
 
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
 
-    condition                      shift and go to state 93
-    expression                     shift and go to state 43
-
-state 73
-
-    (16) inst -> IF LPAREN condition RPAREN . b_bloc
-    (17) inst -> IF LPAREN condition RPAREN . b_bloc else
-    (41) b_bloc -> . LBRACKET linst RBRACKET
-
-    LBRACKET        shift and go to state 92
-
-    b_bloc                         shift and go to state 94
-
-state 74
-
-    (27) expression -> expression operator expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-    COLON           reduce using rule 27 (expression -> expression operator expression .)
-    EQUALS          reduce using rule 27 (expression -> expression operator expression .)
-    LOWER           reduce using rule 27 (expression -> expression operator expression .)
-    HIGHER          reduce using rule 27 (expression -> expression operator expression .)
-    HIGHEQUAL       reduce using rule 27 (expression -> expression operator expression .)
-    LOWEQUAL        reduce using rule 27 (expression -> expression operator expression .)
-    OR              reduce using rule 27 (expression -> expression operator expression .)
-    AND             reduce using rule 27 (expression -> expression operator expression .)
-    RPAREN          reduce using rule 27 (expression -> expression operator expression .)
-    COMMA           reduce using rule 27 (expression -> expression operator expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-  ! PLUS            [ reduce using rule 27 (expression -> expression operator expression .) ]
-  ! MINUS           [ reduce using rule 27 (expression -> expression operator expression .) ]
-  ! DIVIDE          [ reduce using rule 27 (expression -> expression operator expression .) ]
-  ! TIMES           [ reduce using rule 27 (expression -> expression operator expression .) ]
-
-    operator                       shift and go to state 48
-
-state 75
-
-    (20) condition -> expression EQUALS expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-    COLON           reduce using rule 20 (condition -> expression EQUALS expression .)
-    RPAREN          reduce using rule 20 (condition -> expression EQUALS expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-    operator                       shift and go to state 48
-
-state 76
-
-    (21) condition -> expression LOWER expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-    COLON           reduce using rule 21 (condition -> expression LOWER expression .)
-    RPAREN          reduce using rule 21 (condition -> expression LOWER expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-    operator                       shift and go to state 48
-
-state 77
-
-    (22) condition -> expression HIGHER expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-    COLON           reduce using rule 22 (condition -> expression HIGHER expression .)
-    RPAREN          reduce using rule 22 (condition -> expression HIGHER expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-    operator                       shift and go to state 48
-
-state 78
-
-    (23) condition -> expression HIGHEQUAL expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-    COLON           reduce using rule 23 (condition -> expression HIGHEQUAL expression .)
-    RPAREN          reduce using rule 23 (condition -> expression HIGHEQUAL expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-    operator                       shift and go to state 48
-
-state 79
-
-    (24) condition -> expression LOWEQUAL expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-    COLON           reduce using rule 24 (condition -> expression LOWEQUAL expression .)
-    RPAREN          reduce using rule 24 (condition -> expression LOWEQUAL expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-    operator                       shift and go to state 48
-
-state 80
-
-    (25) condition -> expression OR expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-    COLON           reduce using rule 25 (condition -> expression OR expression .)
-    RPAREN          reduce using rule 25 (condition -> expression OR expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-    operator                       shift and go to state 48
-
-state 81
-
-    (26) condition -> expression AND expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-    COLON           reduce using rule 26 (condition -> expression AND expression .)
-    RPAREN          reduce using rule 26 (condition -> expression AND expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-    operator                       shift and go to state 48
-
-state 82
-
-    (31) expression -> NAME LPAREN call_params . RPAREN
-
-    RPAREN          shift and go to state 95
-
-
-state 83
-
-    (46) expression -> LPAREN expression RPAREN .
-
-    COLON           reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    EQUALS          reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    LOWER           reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    HIGHER          reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    HIGHEQUAL       reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    LOWEQUAL        reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    OR              reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    AND             reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    PLUS            reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    TIMES           reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-    COMMA           reduce using rule 46 (expression -> LPAREN expression RPAREN .)
-
+    condition                      shift and go to state 105
+    expression                     shift and go to state 49
 
 state 84
 
-    (36) params -> NAME . COMMA params
-    (37) params -> NAME .
+    (16) inst -> IF LPAREN condition RPAREN . b_bloc
+    (17) inst -> IF LPAREN condition RPAREN . b_bloc else
+    (42) b_bloc -> . LBRACKET linst RBRACKET
 
-    COMMA           shift and go to state 96
-    RPAREN          reduce using rule 37 (params -> NAME .)
+    LBRACKET        shift and go to state 86
 
+    b_bloc                         shift and go to state 106
 
 state 85
 
-    (30) inst -> FUNCTION NAME LPAREN params . RPAREN b_bloc
+    (28) inst -> MAIN LPAREN RPAREN b_bloc .
 
-    RPAREN          shift and go to state 97
+    WHILE           reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    FOR             reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    IF              reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    MAIN            reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    RETURN          reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    FUNCTION        reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    NAME            reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    PRINT           reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    SPRINT          reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    EQUAL           reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    $end            reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
+    RBRACKET        reduce using rule 28 (inst -> MAIN LPAREN RPAREN b_bloc .)
 
 
 state 86
 
-    (32) inst -> NAME LPAREN call_params RPAREN . COLON
-
-    COLON           shift and go to state 98
-
-
-state 87
-
-    (33) call_params -> expression COMMA . call_params
-    (33) call_params -> . expression COMMA call_params
-    (34) call_params -> . expression
-    (35) call_params -> .
-    (27) expression -> . expression operator expression
-    (31) expression -> . NAME LPAREN call_params RPAREN
-    (46) expression -> . LPAREN expression RPAREN
-    (47) expression -> . NUMBER
-    (48) expression -> . TRUE
-    (49) expression -> . FALSE
-    (50) expression -> . NAME
-    (51) expression -> . MINUS expression
-
-    RPAREN          reduce using rule 35 (call_params -> .)
-    NAME            shift and go to state 26
-    LPAREN          shift and go to state 27
-    NUMBER          shift and go to state 28
-    TRUE            shift and go to state 29
-    FALSE           shift and go to state 30
-    MINUS           shift and go to state 31
-
-    expression                     shift and go to state 64
-    call_params                    shift and go to state 99
-
-state 88
-
-    (9) operator_assign -> NAME operator EQUAL expression .
-    (27) expression -> expression . operator expression
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
-
-    COLON           reduce using rule 9 (operator_assign -> NAME operator EQUAL expression .)
-    RPAREN          reduce using rule 9 (operator_assign -> NAME operator EQUAL expression .)
-    PLUS            shift and go to state 56
-    MINUS           shift and go to state 57
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
-
-    operator                       shift and go to state 48
-
-state 89
-
-    (39) inst -> PRINT LPAREN expression RPAREN . COLON
-
-    COLON           shift and go to state 100
-
-
-state 90
-
-    (40) inst -> SPRINT LPAREN STRING RPAREN . COLON
-
-    COLON           shift and go to state 101
-
-
-state 91
-
-    (12) inst -> WHILE LPAREN condition RPAREN b_bloc .
-
-    WHILE           reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-    FOR             reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-    IF              reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-    RETURN          reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-    FUNCTION        reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-    NAME            reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-    PRINT           reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-    SPRINT          reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-    $end            reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-    RBRACKET        reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
-
-
-state 92
-
-    (41) b_bloc -> LBRACKET . linst RBRACKET
+    (42) b_bloc -> LBRACKET . linst RBRACKET
     (2) linst -> . linst inst
     (3) linst -> . inst
     (4) inst -> . increment COLON
@@ -1620,43 +1617,398 @@ state 92
     (15) inst -> . FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc
     (16) inst -> . IF LPAREN condition RPAREN b_bloc
     (17) inst -> . IF LPAREN condition RPAREN b_bloc else
-    (28) inst -> . RETURN expression COLON
-    (29) inst -> . RETURN condition COLON
-    (30) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
-    (32) inst -> . NAME LPAREN call_params RPAREN COLON
-    (39) inst -> . PRINT LPAREN expression RPAREN COLON
-    (40) inst -> . SPRINT LPAREN STRING RPAREN COLON
+    (28) inst -> . MAIN LPAREN RPAREN b_bloc
+    (29) inst -> . RETURN expression COLON
+    (30) inst -> . RETURN condition COLON
+    (31) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
+    (33) inst -> . NAME LPAREN call_params RPAREN COLON
+    (40) inst -> . PRINT LPAREN expression RPAREN COLON
+    (41) inst -> . SPRINT LPAREN STRING RPAREN COLON
+    (54) inst -> . params EQUAL multiple_values
     (7) increment -> . NAME PLUS PLUS
     (8) decrement -> . NAME MINUS MINUS
     (9) operator_assign -> . NAME operator EQUAL expression
     (11) assign -> . NAME EQUAL expression
+    (37) params -> . NAME COMMA params
+    (38) params -> . NAME
+    (39) params -> .
 
     WHILE           shift and go to state 8
     FOR             shift and go to state 9
     IF              shift and go to state 10
-    RETURN          shift and go to state 11
-    FUNCTION        shift and go to state 12
-    NAME            shift and go to state 13
-    PRINT           shift and go to state 14
-    SPRINT          shift and go to state 15
+    MAIN            shift and go to state 11
+    RETURN          shift and go to state 12
+    FUNCTION        shift and go to state 13
+    NAME            shift and go to state 14
+    PRINT           shift and go to state 16
+    SPRINT          shift and go to state 17
+    EQUAL           reduce using rule 39 (params -> .)
 
-    linst                          shift and go to state 102
+    linst                          shift and go to state 107
     inst                           shift and go to state 3
     increment                      shift and go to state 4
     decrement                      shift and go to state 5
     operator_assign                shift and go to state 6
     assign                         shift and go to state 7
+    params                         shift and go to state 15
+
+state 87
+
+    (27) expression -> expression operator expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for MODULO resolved as shift
+    COLON           reduce using rule 27 (expression -> expression operator expression .)
+    EQUALS          reduce using rule 27 (expression -> expression operator expression .)
+    LOWER           reduce using rule 27 (expression -> expression operator expression .)
+    HIGHER          reduce using rule 27 (expression -> expression operator expression .)
+    HIGHEQUAL       reduce using rule 27 (expression -> expression operator expression .)
+    LOWEQUAL        reduce using rule 27 (expression -> expression operator expression .)
+    OR              reduce using rule 27 (expression -> expression operator expression .)
+    AND             reduce using rule 27 (expression -> expression operator expression .)
+    RPAREN          reduce using rule 27 (expression -> expression operator expression .)
+    COMMA           reduce using rule 27 (expression -> expression operator expression .)
+    WHILE           reduce using rule 27 (expression -> expression operator expression .)
+    FOR             reduce using rule 27 (expression -> expression operator expression .)
+    IF              reduce using rule 27 (expression -> expression operator expression .)
+    MAIN            reduce using rule 27 (expression -> expression operator expression .)
+    RETURN          reduce using rule 27 (expression -> expression operator expression .)
+    FUNCTION        reduce using rule 27 (expression -> expression operator expression .)
+    NAME            reduce using rule 27 (expression -> expression operator expression .)
+    PRINT           reduce using rule 27 (expression -> expression operator expression .)
+    SPRINT          reduce using rule 27 (expression -> expression operator expression .)
+    EQUAL           reduce using rule 27 (expression -> expression operator expression .)
+    $end            reduce using rule 27 (expression -> expression operator expression .)
+    RBRACKET        reduce using rule 27 (expression -> expression operator expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+  ! PLUS            [ reduce using rule 27 (expression -> expression operator expression .) ]
+  ! MINUS           [ reduce using rule 27 (expression -> expression operator expression .) ]
+  ! DIVIDE          [ reduce using rule 27 (expression -> expression operator expression .) ]
+  ! TIMES           [ reduce using rule 27 (expression -> expression operator expression .) ]
+  ! MODULO          [ reduce using rule 27 (expression -> expression operator expression .) ]
+
+    operator                       shift and go to state 55
+
+state 88
+
+    (20) condition -> expression EQUALS expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COLON           reduce using rule 20 (condition -> expression EQUALS expression .)
+    RPAREN          reduce using rule 20 (condition -> expression EQUALS expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 89
+
+    (21) condition -> expression LOWER expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COLON           reduce using rule 21 (condition -> expression LOWER expression .)
+    RPAREN          reduce using rule 21 (condition -> expression LOWER expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 90
+
+    (22) condition -> expression HIGHER expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COLON           reduce using rule 22 (condition -> expression HIGHER expression .)
+    RPAREN          reduce using rule 22 (condition -> expression HIGHER expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 91
+
+    (23) condition -> expression HIGHEQUAL expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COLON           reduce using rule 23 (condition -> expression HIGHEQUAL expression .)
+    RPAREN          reduce using rule 23 (condition -> expression HIGHEQUAL expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 92
+
+    (24) condition -> expression LOWEQUAL expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COLON           reduce using rule 24 (condition -> expression LOWEQUAL expression .)
+    RPAREN          reduce using rule 24 (condition -> expression LOWEQUAL expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
 
 state 93
+
+    (25) condition -> expression OR expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COLON           reduce using rule 25 (condition -> expression OR expression .)
+    RPAREN          reduce using rule 25 (condition -> expression OR expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 94
+
+    (26) condition -> expression AND expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COLON           reduce using rule 26 (condition -> expression AND expression .)
+    RPAREN          reduce using rule 26 (condition -> expression AND expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 95
+
+    (32) expression -> NAME LPAREN call_params . RPAREN
+
+    RPAREN          shift and go to state 108
+
+
+state 96
+
+    (48) expression -> LPAREN expression RPAREN .
+
+    COLON           reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    EQUALS          reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    LOWER           reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    HIGHER          reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    HIGHEQUAL       reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    LOWEQUAL        reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    OR              reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    AND             reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    MODULO          reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    WHILE           reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    FOR             reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    IF              reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    MAIN            reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    RETURN          reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    FUNCTION        reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    NAME            reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    PRINT           reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    SPRINT          reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    EQUAL           reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    $end            reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+    RBRACKET        reduce using rule 48 (expression -> LPAREN expression RPAREN .)
+
+
+state 97
+
+    (31) inst -> FUNCTION NAME LPAREN params . RPAREN b_bloc
+
+    RPAREN          shift and go to state 109
+
+
+state 98
+
+    (33) inst -> NAME LPAREN call_params RPAREN . COLON
+
+    COLON           shift and go to state 110
+
+
+state 99
+
+    (34) call_params -> expression COMMA . call_params
+    (34) call_params -> . expression COMMA call_params
+    (35) call_params -> . expression
+    (36) call_params -> .
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
+
+    RPAREN          reduce using rule 36 (call_params -> .)
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
+
+    expression                     shift and go to state 71
+    call_params                    shift and go to state 111
+
+state 100
+
+    (9) operator_assign -> NAME operator EQUAL expression .
+    (27) expression -> expression . operator expression
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
+
+    COLON           reduce using rule 9 (operator_assign -> NAME operator EQUAL expression .)
+    RPAREN          reduce using rule 9 (operator_assign -> NAME operator EQUAL expression .)
+    PLUS            shift and go to state 63
+    MINUS           shift and go to state 64
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
+
+    operator                       shift and go to state 55
+
+state 101
+
+    (56) multiple_values -> expression COMMA . multiple_values
+    (55) multiple_values -> . expression
+    (56) multiple_values -> . expression COMMA multiple_values
+    (27) expression -> . expression operator expression
+    (32) expression -> . NAME LPAREN call_params RPAREN
+    (48) expression -> . LPAREN expression RPAREN
+    (49) expression -> . NUMBER
+    (50) expression -> . TRUE
+    (51) expression -> . FALSE
+    (52) expression -> . NAME
+    (53) expression -> . MINUS expression
+
+    NAME            shift and go to state 29
+    LPAREN          shift and go to state 30
+    NUMBER          shift and go to state 31
+    TRUE            shift and go to state 32
+    FALSE           shift and go to state 33
+    MINUS           shift and go to state 34
+
+    expression                     shift and go to state 79
+    multiple_values                shift and go to state 112
+
+state 102
+
+    (40) inst -> PRINT LPAREN expression RPAREN . COLON
+
+    COLON           shift and go to state 113
+
+
+state 103
+
+    (41) inst -> SPRINT LPAREN STRING RPAREN . COLON
+
+    COLON           shift and go to state 114
+
+
+state 104
+
+    (12) inst -> WHILE LPAREN condition RPAREN b_bloc .
+
+    WHILE           reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    FOR             reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    IF              reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    MAIN            reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    RETURN          reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    FUNCTION        reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    NAME            reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    PRINT           reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    SPRINT          reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    EQUAL           reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    $end            reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+    RBRACKET        reduce using rule 12 (inst -> WHILE LPAREN condition RPAREN b_bloc .)
+
+
+state 105
 
     (13) inst -> FOR LPAREN assign COLON condition . COLON increment RPAREN b_bloc
     (14) inst -> FOR LPAREN assign COLON condition . COLON operator_assign RPAREN b_bloc
     (15) inst -> FOR LPAREN assign COLON condition . COLON decrement RPAREN b_bloc
 
-    COLON           shift and go to state 103
+    COLON           shift and go to state 115
 
 
-state 94
+state 106
 
     (16) inst -> IF LPAREN condition RPAREN b_bloc .
     (17) inst -> IF LPAREN condition RPAREN b_bloc . else
@@ -1666,116 +2018,22 @@ state 94
     WHILE           reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
     FOR             reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
     IF              reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
+    MAIN            reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
     RETURN          reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
     FUNCTION        reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
     NAME            reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
     PRINT           reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
     SPRINT          reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
+    EQUAL           reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
     $end            reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
     RBRACKET        reduce using rule 16 (inst -> IF LPAREN condition RPAREN b_bloc .)
-    ELSE            shift and go to state 105
+    ELSE            shift and go to state 117
 
-    else                           shift and go to state 104
+    else                           shift and go to state 116
 
-state 95
+state 107
 
-    (31) expression -> NAME LPAREN call_params RPAREN .
-
-    COLON           reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    EQUALS          reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    LOWER           reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    HIGHER          reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    HIGHEQUAL       reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    LOWEQUAL        reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    OR              reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    AND             reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    PLUS            reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    MINUS           reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    DIVIDE          reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    TIMES           reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    RPAREN          reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-    COMMA           reduce using rule 31 (expression -> NAME LPAREN call_params RPAREN .)
-
-
-state 96
-
-    (36) params -> NAME COMMA . params
-    (36) params -> . NAME COMMA params
-    (37) params -> . NAME
-    (38) params -> .
-
-    NAME            shift and go to state 84
-    RPAREN          reduce using rule 38 (params -> .)
-
-    params                         shift and go to state 106
-
-state 97
-
-    (30) inst -> FUNCTION NAME LPAREN params RPAREN . b_bloc
-    (41) b_bloc -> . LBRACKET linst RBRACKET
-
-    LBRACKET        shift and go to state 92
-
-    b_bloc                         shift and go to state 107
-
-state 98
-
-    (32) inst -> NAME LPAREN call_params RPAREN COLON .
-
-    WHILE           reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    FOR             reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    IF              reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    RETURN          reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    FUNCTION        reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    NAME            reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    PRINT           reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    SPRINT          reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    $end            reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-    RBRACKET        reduce using rule 32 (inst -> NAME LPAREN call_params RPAREN COLON .)
-
-
-state 99
-
-    (33) call_params -> expression COMMA call_params .
-
-    RPAREN          reduce using rule 33 (call_params -> expression COMMA call_params .)
-
-
-state 100
-
-    (39) inst -> PRINT LPAREN expression RPAREN COLON .
-
-    WHILE           reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-    FOR             reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-    IF              reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-    RETURN          reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-    FUNCTION        reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-    NAME            reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-    PRINT           reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-    SPRINT          reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-    $end            reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-    RBRACKET        reduce using rule 39 (inst -> PRINT LPAREN expression RPAREN COLON .)
-
-
-state 101
-
-    (40) inst -> SPRINT LPAREN STRING RPAREN COLON .
-
-    WHILE           reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-    FOR             reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-    IF              reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-    RETURN          reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-    FUNCTION        reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-    NAME            reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-    PRINT           reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-    SPRINT          reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-    $end            reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-    RBRACKET        reduce using rule 40 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
-
-
-state 102
-
-    (41) b_bloc -> LBRACKET linst . RBRACKET
+    (42) b_bloc -> LBRACKET linst . RBRACKET
     (2) linst -> linst . inst
     (4) inst -> . increment COLON
     (5) inst -> . decrement COLON
@@ -1787,34 +2045,163 @@ state 102
     (15) inst -> . FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc
     (16) inst -> . IF LPAREN condition RPAREN b_bloc
     (17) inst -> . IF LPAREN condition RPAREN b_bloc else
-    (28) inst -> . RETURN expression COLON
-    (29) inst -> . RETURN condition COLON
-    (30) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
-    (32) inst -> . NAME LPAREN call_params RPAREN COLON
-    (39) inst -> . PRINT LPAREN expression RPAREN COLON
-    (40) inst -> . SPRINT LPAREN STRING RPAREN COLON
+    (28) inst -> . MAIN LPAREN RPAREN b_bloc
+    (29) inst -> . RETURN expression COLON
+    (30) inst -> . RETURN condition COLON
+    (31) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
+    (33) inst -> . NAME LPAREN call_params RPAREN COLON
+    (40) inst -> . PRINT LPAREN expression RPAREN COLON
+    (41) inst -> . SPRINT LPAREN STRING RPAREN COLON
+    (54) inst -> . params EQUAL multiple_values
     (7) increment -> . NAME PLUS PLUS
     (8) decrement -> . NAME MINUS MINUS
     (9) operator_assign -> . NAME operator EQUAL expression
     (11) assign -> . NAME EQUAL expression
+    (37) params -> . NAME COMMA params
+    (38) params -> . NAME
+    (39) params -> .
 
-    RBRACKET        shift and go to state 108
+    RBRACKET        shift and go to state 118
     WHILE           shift and go to state 8
     FOR             shift and go to state 9
     IF              shift and go to state 10
-    RETURN          shift and go to state 11
-    FUNCTION        shift and go to state 12
-    NAME            shift and go to state 13
-    PRINT           shift and go to state 14
-    SPRINT          shift and go to state 15
+    MAIN            shift and go to state 11
+    RETURN          shift and go to state 12
+    FUNCTION        shift and go to state 13
+    NAME            shift and go to state 14
+    PRINT           shift and go to state 16
+    SPRINT          shift and go to state 17
+    EQUAL           reduce using rule 39 (params -> .)
 
-    inst                           shift and go to state 16
+    inst                           shift and go to state 18
     increment                      shift and go to state 4
     decrement                      shift and go to state 5
     operator_assign                shift and go to state 6
     assign                         shift and go to state 7
+    params                         shift and go to state 15
 
-state 103
+state 108
+
+    (32) expression -> NAME LPAREN call_params RPAREN .
+
+    COLON           reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    EQUALS          reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    LOWER           reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    HIGHER          reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    HIGHEQUAL       reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    LOWEQUAL        reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    OR              reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    AND             reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    PLUS            reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    MINUS           reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    DIVIDE          reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    TIMES           reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    MODULO          reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    RPAREN          reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    COMMA           reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    WHILE           reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    FOR             reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    IF              reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    MAIN            reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    RETURN          reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    FUNCTION        reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    NAME            reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    PRINT           reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    SPRINT          reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    EQUAL           reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    $end            reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+    RBRACKET        reduce using rule 32 (expression -> NAME LPAREN call_params RPAREN .)
+
+
+state 109
+
+    (31) inst -> FUNCTION NAME LPAREN params RPAREN . b_bloc
+    (42) b_bloc -> . LBRACKET linst RBRACKET
+
+    LBRACKET        shift and go to state 86
+
+    b_bloc                         shift and go to state 119
+
+state 110
+
+    (33) inst -> NAME LPAREN call_params RPAREN COLON .
+
+    WHILE           reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    FOR             reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    IF              reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    MAIN            reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    RETURN          reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    FUNCTION        reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    NAME            reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    PRINT           reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    SPRINT          reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    EQUAL           reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    $end            reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+    RBRACKET        reduce using rule 33 (inst -> NAME LPAREN call_params RPAREN COLON .)
+
+
+state 111
+
+    (34) call_params -> expression COMMA call_params .
+
+    RPAREN          reduce using rule 34 (call_params -> expression COMMA call_params .)
+
+
+state 112
+
+    (56) multiple_values -> expression COMMA multiple_values .
+
+    WHILE           reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    FOR             reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    IF              reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    MAIN            reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    RETURN          reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    FUNCTION        reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    NAME            reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    PRINT           reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    SPRINT          reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    EQUAL           reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    $end            reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+    RBRACKET        reduce using rule 56 (multiple_values -> expression COMMA multiple_values .)
+
+
+state 113
+
+    (40) inst -> PRINT LPAREN expression RPAREN COLON .
+
+    WHILE           reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    FOR             reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    IF              reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    MAIN            reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    RETURN          reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    FUNCTION        reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    NAME            reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    PRINT           reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    SPRINT          reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    EQUAL           reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    $end            reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+    RBRACKET        reduce using rule 40 (inst -> PRINT LPAREN expression RPAREN COLON .)
+
+
+state 114
+
+    (41) inst -> SPRINT LPAREN STRING RPAREN COLON .
+
+    WHILE           reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    FOR             reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    IF              reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    MAIN            reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    RETURN          reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    FUNCTION        reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    NAME            reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    PRINT           reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    SPRINT          reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    EQUAL           reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    $end            reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+    RBRACKET        reduce using rule 41 (inst -> SPRINT LPAREN STRING RPAREN COLON .)
+
+
+state 115
 
     (13) inst -> FOR LPAREN assign COLON condition COLON . increment RPAREN b_bloc
     (14) inst -> FOR LPAREN assign COLON condition COLON . operator_assign RPAREN b_bloc
@@ -1823,29 +2210,31 @@ state 103
     (9) operator_assign -> . NAME operator EQUAL expression
     (8) decrement -> . NAME MINUS MINUS
 
-    NAME            shift and go to state 112
+    NAME            shift and go to state 123
 
-    increment                      shift and go to state 109
-    operator_assign                shift and go to state 110
-    decrement                      shift and go to state 111
+    increment                      shift and go to state 120
+    operator_assign                shift and go to state 121
+    decrement                      shift and go to state 122
 
-state 104
+state 116
 
     (17) inst -> IF LPAREN condition RPAREN b_bloc else .
 
     WHILE           reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
     FOR             reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
     IF              reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
+    MAIN            reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
     RETURN          reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
     FUNCTION        reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
     NAME            reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
     PRINT           reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
     SPRINT          reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
+    EQUAL           reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
     $end            reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
     RBRACKET        reduce using rule 17 (inst -> IF LPAREN condition RPAREN b_bloc else .)
 
 
-state 105
+state 117
 
     (18) else -> ELSE . inst
     (19) else -> ELSE . b_bloc
@@ -1859,223 +2248,242 @@ state 105
     (15) inst -> . FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc
     (16) inst -> . IF LPAREN condition RPAREN b_bloc
     (17) inst -> . IF LPAREN condition RPAREN b_bloc else
-    (28) inst -> . RETURN expression COLON
-    (29) inst -> . RETURN condition COLON
-    (30) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
-    (32) inst -> . NAME LPAREN call_params RPAREN COLON
-    (39) inst -> . PRINT LPAREN expression RPAREN COLON
-    (40) inst -> . SPRINT LPAREN STRING RPAREN COLON
-    (41) b_bloc -> . LBRACKET linst RBRACKET
+    (28) inst -> . MAIN LPAREN RPAREN b_bloc
+    (29) inst -> . RETURN expression COLON
+    (30) inst -> . RETURN condition COLON
+    (31) inst -> . FUNCTION NAME LPAREN params RPAREN b_bloc
+    (33) inst -> . NAME LPAREN call_params RPAREN COLON
+    (40) inst -> . PRINT LPAREN expression RPAREN COLON
+    (41) inst -> . SPRINT LPAREN STRING RPAREN COLON
+    (54) inst -> . params EQUAL multiple_values
+    (42) b_bloc -> . LBRACKET linst RBRACKET
     (7) increment -> . NAME PLUS PLUS
     (8) decrement -> . NAME MINUS MINUS
     (9) operator_assign -> . NAME operator EQUAL expression
     (11) assign -> . NAME EQUAL expression
+    (37) params -> . NAME COMMA params
+    (38) params -> . NAME
+    (39) params -> .
 
     WHILE           shift and go to state 8
     FOR             shift and go to state 9
     IF              shift and go to state 10
-    RETURN          shift and go to state 11
-    FUNCTION        shift and go to state 12
-    NAME            shift and go to state 13
-    PRINT           shift and go to state 14
-    SPRINT          shift and go to state 15
-    LBRACKET        shift and go to state 92
+    MAIN            shift and go to state 11
+    RETURN          shift and go to state 12
+    FUNCTION        shift and go to state 13
+    NAME            shift and go to state 14
+    PRINT           shift and go to state 16
+    SPRINT          shift and go to state 17
+    LBRACKET        shift and go to state 86
+    EQUAL           reduce using rule 39 (params -> .)
 
-    inst                           shift and go to state 113
-    b_bloc                         shift and go to state 114
+    inst                           shift and go to state 124
+    b_bloc                         shift and go to state 125
     increment                      shift and go to state 4
     decrement                      shift and go to state 5
     operator_assign                shift and go to state 6
     assign                         shift and go to state 7
+    params                         shift and go to state 15
 
-state 106
+state 118
 
-    (36) params -> NAME COMMA params .
+    (42) b_bloc -> LBRACKET linst RBRACKET .
 
-    RPAREN          reduce using rule 36 (params -> NAME COMMA params .)
-
-
-state 107
-
-    (30) inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .
-
-    WHILE           reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
-    FOR             reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
-    IF              reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
-    RETURN          reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
-    FUNCTION        reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
-    NAME            reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
-    PRINT           reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
-    SPRINT          reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
-    $end            reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
-    RBRACKET        reduce using rule 30 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    WHILE           reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    FOR             reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    IF              reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    MAIN            reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    RETURN          reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    FUNCTION        reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    NAME            reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    PRINT           reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    SPRINT          reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    EQUAL           reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    $end            reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    RBRACKET        reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
+    ELSE            reduce using rule 42 (b_bloc -> LBRACKET linst RBRACKET .)
 
 
-state 108
+state 119
 
-    (41) b_bloc -> LBRACKET linst RBRACKET .
+    (31) inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .
 
-    WHILE           reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    FOR             reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    IF              reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    RETURN          reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    FUNCTION        reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    NAME            reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    PRINT           reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    SPRINT          reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    $end            reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    RBRACKET        reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
-    ELSE            reduce using rule 41 (b_bloc -> LBRACKET linst RBRACKET .)
+    WHILE           reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    FOR             reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    IF              reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    MAIN            reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    RETURN          reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    FUNCTION        reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    NAME            reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    PRINT           reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    SPRINT          reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    EQUAL           reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    $end            reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
+    RBRACKET        reduce using rule 31 (inst -> FUNCTION NAME LPAREN params RPAREN b_bloc .)
 
 
-state 109
+state 120
 
     (13) inst -> FOR LPAREN assign COLON condition COLON increment . RPAREN b_bloc
 
-    RPAREN          shift and go to state 115
+    RPAREN          shift and go to state 126
 
 
-state 110
+state 121
 
     (14) inst -> FOR LPAREN assign COLON condition COLON operator_assign . RPAREN b_bloc
 
-    RPAREN          shift and go to state 116
+    RPAREN          shift and go to state 127
 
 
-state 111
+state 122
 
     (15) inst -> FOR LPAREN assign COLON condition COLON decrement . RPAREN b_bloc
 
-    RPAREN          shift and go to state 117
+    RPAREN          shift and go to state 128
 
 
-state 112
+state 123
 
     (7) increment -> NAME . PLUS PLUS
     (9) operator_assign -> NAME . operator EQUAL expression
     (8) decrement -> NAME . MINUS MINUS
-    (42) operator -> . PLUS
-    (43) operator -> . MINUS
-    (44) operator -> . DIVIDE
-    (45) operator -> . TIMES
+    (43) operator -> . PLUS
+    (44) operator -> . MINUS
+    (45) operator -> . DIVIDE
+    (46) operator -> . TIMES
+    (47) operator -> . MODULO
 
-    PLUS            shift and go to state 34
-    MINUS           shift and go to state 35
-    DIVIDE          shift and go to state 38
-    TIMES           shift and go to state 39
+    PLUS            shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 42
+    TIMES           shift and go to state 43
+    MODULO          shift and go to state 44
 
-    operator                       shift and go to state 36
+    operator                       shift and go to state 39
 
-state 113
+state 124
 
     (18) else -> ELSE inst .
 
     WHILE           reduce using rule 18 (else -> ELSE inst .)
     FOR             reduce using rule 18 (else -> ELSE inst .)
     IF              reduce using rule 18 (else -> ELSE inst .)
+    MAIN            reduce using rule 18 (else -> ELSE inst .)
     RETURN          reduce using rule 18 (else -> ELSE inst .)
     FUNCTION        reduce using rule 18 (else -> ELSE inst .)
     NAME            reduce using rule 18 (else -> ELSE inst .)
     PRINT           reduce using rule 18 (else -> ELSE inst .)
     SPRINT          reduce using rule 18 (else -> ELSE inst .)
+    EQUAL           reduce using rule 18 (else -> ELSE inst .)
     $end            reduce using rule 18 (else -> ELSE inst .)
     RBRACKET        reduce using rule 18 (else -> ELSE inst .)
 
 
-state 114
+state 125
 
     (19) else -> ELSE b_bloc .
 
     WHILE           reduce using rule 19 (else -> ELSE b_bloc .)
     FOR             reduce using rule 19 (else -> ELSE b_bloc .)
     IF              reduce using rule 19 (else -> ELSE b_bloc .)
+    MAIN            reduce using rule 19 (else -> ELSE b_bloc .)
     RETURN          reduce using rule 19 (else -> ELSE b_bloc .)
     FUNCTION        reduce using rule 19 (else -> ELSE b_bloc .)
     NAME            reduce using rule 19 (else -> ELSE b_bloc .)
     PRINT           reduce using rule 19 (else -> ELSE b_bloc .)
     SPRINT          reduce using rule 19 (else -> ELSE b_bloc .)
+    EQUAL           reduce using rule 19 (else -> ELSE b_bloc .)
     $end            reduce using rule 19 (else -> ELSE b_bloc .)
     RBRACKET        reduce using rule 19 (else -> ELSE b_bloc .)
 
 
-state 115
+state 126
 
     (13) inst -> FOR LPAREN assign COLON condition COLON increment RPAREN . b_bloc
-    (41) b_bloc -> . LBRACKET linst RBRACKET
+    (42) b_bloc -> . LBRACKET linst RBRACKET
 
-    LBRACKET        shift and go to state 92
+    LBRACKET        shift and go to state 86
 
-    b_bloc                         shift and go to state 118
+    b_bloc                         shift and go to state 129
 
-state 116
+state 127
 
     (14) inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN . b_bloc
-    (41) b_bloc -> . LBRACKET linst RBRACKET
+    (42) b_bloc -> . LBRACKET linst RBRACKET
 
-    LBRACKET        shift and go to state 92
+    LBRACKET        shift and go to state 86
 
-    b_bloc                         shift and go to state 119
+    b_bloc                         shift and go to state 130
 
-state 117
+state 128
 
     (15) inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN . b_bloc
-    (41) b_bloc -> . LBRACKET linst RBRACKET
+    (42) b_bloc -> . LBRACKET linst RBRACKET
 
-    LBRACKET        shift and go to state 92
+    LBRACKET        shift and go to state 86
 
-    b_bloc                         shift and go to state 120
+    b_bloc                         shift and go to state 131
 
-state 118
+state 129
 
     (13) inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .
 
     WHILE           reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
     FOR             reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
     IF              reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
+    MAIN            reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
     RETURN          reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
     FUNCTION        reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
     NAME            reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
     PRINT           reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
     SPRINT          reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
+    EQUAL           reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
     $end            reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
     RBRACKET        reduce using rule 13 (inst -> FOR LPAREN assign COLON condition COLON increment RPAREN b_bloc .)
 
 
-state 119
+state 130
 
     (14) inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .
 
     WHILE           reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
     FOR             reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
     IF              reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
+    MAIN            reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
     RETURN          reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
     FUNCTION        reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
     NAME            reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
     PRINT           reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
     SPRINT          reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
+    EQUAL           reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
     $end            reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
     RBRACKET        reduce using rule 14 (inst -> FOR LPAREN assign COLON condition COLON operator_assign RPAREN b_bloc .)
 
 
-state 120
+state 131
 
     (15) inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .
 
     WHILE           reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
     FOR             reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
     IF              reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
+    MAIN            reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
     RETURN          reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
     FUNCTION        reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
     NAME            reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
     PRINT           reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
     SPRINT          reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
+    EQUAL           reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
     $end            reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
     RBRACKET        reduce using rule 15 (inst -> FOR LPAREN assign COLON condition COLON decrement RPAREN b_bloc .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for PLUS in state 74 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 74 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 74 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 74 resolved as shift
+WARNING: shift/reduce conflict for EQUAL in state 14 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 87 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 87 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 87 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 87 resolved as shift
+WARNING: shift/reduce conflict for MODULO in state 87 resolved as shift

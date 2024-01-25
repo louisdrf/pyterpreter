@@ -1,14 +1,21 @@
 from env_const import globals as g
+from env_const import colors
 
 def evalInst(t):
 
     if g.current_return_val and g.current_function:
         return
     
-    print('evalInst', t)
+    # print('evalInst', t)
     if type(t)!=tuple : 
-        print('warning')
         return
+    
+    if t[0] == 'main': 
+        linst = t[1]
+        for inst in linst:
+            g.stack.append(inst)
+        
+        print(g.stack)
     
     if t[0]=='bloc' :
             evalInst(t[1])
@@ -18,14 +25,25 @@ def evalInst(t):
         print(evalExpr(t[1]))
         
     if t[0] == 'sprint':
-        print(f"{t[1]}")
+        print(f"{colors.blue}{t[1]}{colors.reset}")
             
     if t[0]=='assign' :
         if len(t) > 3:
             g.names[(t[1], t[3])]=evalExpr(t[2]) 
         else:
-            scope = g.current_function if (t[1], g.current_function) in g.names else "global"
+            scope = g.current_function if (t[1], g.current_function) in g.names or g.current_function else "global"
             g.names[(t[1], scope)]=evalExpr(t[2])
+            
+    if t[0] == 'multiple_assign':
+        variables, values = t[1], t[2]
+        if len(variables) != len(values) or len(values) == 0:
+            raise ValueError(f"Erreur: le nombre de valeurs ne correspond pas au nombre de variables")
+        else:    
+            for i in range(0, len(variables)):
+               scope = g.current_function if (variables[i], g.current_function) in g.names or g.current_function else "global"
+               g.names[(variables[i], scope)]=evalExpr(values[i]) 
+            
+        
 
     if t[0]=='increment':
         scope = g.current_function if (t[1], g.current_function) in g.names else "global"
@@ -103,7 +121,7 @@ def evalInst(t):
    
 
 def evalExpr(t):
-    print('evalExpr', t)
+    # print('evalExpr', t)
     if type(t) == bool:
         return t
     if type(t) == int:
@@ -129,6 +147,8 @@ def evalExpr(t):
                 return evalExpr(t[1]) - evalExpr(t[2])
             else:
                 return (-1) * evalExpr(t[1])
+        elif t[0] == '%':
+            return evalExpr(t[1]) % evalExpr(t[2])
         # Condition
         elif t[0] == '==':
             return evalExpr(t[1]) == evalExpr(t[2])

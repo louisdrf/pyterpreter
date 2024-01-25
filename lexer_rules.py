@@ -1,7 +1,6 @@
 reserved = {
    'if'      : 'IF',
    'else'    : 'ELSE',
-   'then'    : 'THEN',
    'print'   : 'PRINT',
    'while'   : 'WHILE',
    'for'     : 'FOR',
@@ -10,14 +9,14 @@ reserved = {
    'sprint'  : 'SPRINT',
    'true'    : 'TRUE',
    'false'   : 'FALSE',
-   'main()'  : 'MAIN',
+   'main'    : 'MAIN'
 }
 
 
 tokens = [
     'NAME','NUMBER','STRING',
-    'PLUS','MINUS','TIMES','DIVIDE', 
-    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA','LSQBRACKET', 'RSQBRACKET',
+    'PLUS','MINUS','TIMES','DIVIDE', 'MODULO',
+    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA', 'MAIN',
     'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER', 'HIGHEQUAL', 'LOWEQUAL',
     ] + list(reserved.values())
 
@@ -27,13 +26,12 @@ t_PLUS      = r'\+'
 t_MINUS     = r'-'
 t_TIMES     = r'\*'
 t_DIVIDE    = r'/'
+t_MODULO    = r'%'
 t_EQUAL     = r'='
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
 t_LBRACKET  = r'\{'
 t_RBRACKET  = r'\}'
-t_RSQBRACKET = r'\]'
-t_LSQBRACKET = r'\['
 t_COLON     = r';'
 t_COMMA     = r','
 t_AND       = r'\&'

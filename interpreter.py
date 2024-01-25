@@ -10,13 +10,11 @@ lexer = lex.lex()
 import ply.yacc as yacc
 parser = yacc.yacc()
 
+
 s = '''
-function test(a, b, c) {
-    print(12);
+main() {
+    print(5);
+    print(6);
 }
-
-x = test(1, 2, 3);
 '''
-
-   
 parser.parse(s)
