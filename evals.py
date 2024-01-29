@@ -2,24 +2,38 @@ from env_const import globals as g
 from env_const import colors
 
 def evalInst(t):
-
+    
+    print('evalInst', t)
+    print('stack ', g.stack)
+    
     if g.current_return_val and g.current_function:
         return
     
-    # print('evalInst', t)
-    if type(t)!=tuple : 
+    if type(t) != tuple : 
         return
     
-    if t[0] == 'main': 
-        linst = t[1]
-        for inst in linst:
-            g.stack.append(inst)
+    if t[0] == 'start':
+        for function_def in t[1]:
+             evalInst(function_def)
+        evalInst(t[2]) # évaluer le main
         
-        print(g.stack)
-    
-    if t[0]=='bloc' :
-            evalInst(t[1])
-            evalInst(t[2])
+         
+    if t[0]=='main':
+        main_linst = t[1]
+        g.stack.append('main')
+        i = 0
+        
+        while len(g.stack) > 0:
+            if i < len(main_linst):
+                g.stack.append(main_linst[i])
+                evalInst(g.stack[-1])
+                g.stack.pop()
+                i+=1
+            else:
+                g.stack.pop()
+            
+        
+             
                     
     if t[0]=='print' :
         print(evalExpr(t[1]))
@@ -98,7 +112,7 @@ def evalInst(t):
         
         g.functions[function_name] = {'params': params, 'instructions': instructions}
         if len(params) > 0: # Si la fonction a des paramètres à déclarer
-            for param in params:
+           for param in params:
                 evalInst(('assign', param, 0, function_name))
                          
     if t[0]=='call':

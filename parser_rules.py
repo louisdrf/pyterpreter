@@ -8,24 +8,31 @@ precedence = (
     ('left', 'TIMES', 'DIVIDE', 'MODULO')
 )
 
-
 def p_start(t):
-    ''' start : linst'''
-    t[0] = ('start',t[1])
-    print(t[0])
-    # printTreeGraph(t[0])
-    evalInst(t[1])
-    
+    '''start : function_list main 
+             | main'''
+    if len(t) == 2:
+        evalInst(('main', t[1]))
+    else:
+        evalInst(('start', t[1], t[2]))
    
-               
 
-def p_line(t):
+def p_linst(t):
     '''linst : linst inst 
             | inst '''
-    if len(t) == 3 :
-        t[0] = ('bloc',t[1], t[2])
+    if len(t) == 2:
+        t[0] = [t[1]] 
     else:
-        t[0] = ('bloc',t[1], 'empty')
+        t[1].append(t[2])
+        t[0] = t[1]  
+
+
+
+############################ STACK ET MAIN ###################################
+
+def p_statement_main(t):                
+    'main : FUNCTION MAIN LPAREN RPAREN b_bloc'
+    t[0] = t[5] 
 
 
 
@@ -118,18 +125,26 @@ def p_expression_operator(t):
 
 ############################ FONCTIONS ###################################
 
-def p_expression_main(t):
-    'inst : MAIN LPAREN RPAREN b_bloc'
-    t[0] = ('main', t[4])
-
 def p_statement_return(t):
     '''inst : RETURN expression COLON
             | RETURN condition COLON'''
     t[0] = ('return', t[2])
    
+   
+# déclarer plusieurs fonctions
+def p_statements_prototypes(t):
+    '''function_list : function_list function
+                     | function'''
+    if len(t) == 2:
+        t[0] = [t[1]] 
+    else:
+        t[1].append(t[2])
+        t[0] = t[1] 
+    
+    
 # déclarer une fonction 
 def p_statement_function(t):                
-    'inst : FUNCTION NAME LPAREN params RPAREN b_bloc'
+    'function : FUNCTION NAME LPAREN params RPAREN b_bloc'
     t[0] = ('function', t[2], t[4], t[6]) 
     
 # appeler une fonction qui retourne une valeur
@@ -144,7 +159,7 @@ def p_statement_call_function_void(t):
     t[0] = ('call', t[1], t[3])
     
     
-def p_expression_call_params(t):
+def p_expression_call_params(t): # fix bug ex : a ,
     '''call_params : expression COMMA call_params 
                    | expression
                    | '''

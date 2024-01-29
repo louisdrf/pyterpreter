@@ -4,7 +4,7 @@ reserved = {
    'print'   : 'PRINT',
    'while'   : 'WHILE',
    'for'     : 'FOR',
-   'function': 'FUNCTION', 
+   'def'     : 'FUNCTION', 
    'return'  : 'RETURN',
    'sprint'  : 'SPRINT',
    'true'    : 'TRUE',
@@ -16,7 +16,7 @@ reserved = {
 tokens = [
     'NAME','NUMBER','STRING',
     'PLUS','MINUS','TIMES','DIVIDE', 'MODULO',
-    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA', 'MAIN',
+    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'COLON', 'COMMA',
     'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER', 'HIGHEQUAL', 'LOWEQUAL',
     ] + list(reserved.values())
 

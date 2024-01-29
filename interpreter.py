@@ -12,9 +12,13 @@ parser = yacc.yacc()
 
 
 s = '''
-main() {
+
+def main() {
     print(5);
-    print(6);
+    print(6+1);
+    a = 2;
+    b = (a+a);
+    sprint("test");
 }
 '''
 parser.parse(s)
