@@ -3,9 +3,6 @@ from env_const import colors
 
 def evalInst(t):
     
-    print('evalInst', t)
-    print('stack ', g.stack)
-    
     if g.current_return_val and g.current_function:
         return
     
@@ -26,12 +23,18 @@ def evalInst(t):
         while len(g.stack) > 0:
             if i < len(main_linst):
                 g.stack.append(main_linst[i])
+                print('stack ', g.stack)
+                print('evalInst', g.stack[-1])
                 evalInst(g.stack[-1])
                 g.stack.pop()
                 i+=1
             else:
                 g.stack.pop()
             
+            
+    if t[0] == 'linst':
+        for inst in t[1]:
+            evalInst(inst)
         
              
                     
@@ -80,26 +83,28 @@ def evalInst(t):
             g.names[(t[1], scope)] *= evalExpr(t[3])
             
     if t[0]=='if' : 
-        condition, inst_if, inst_else = t[1], t[2], t[3]
+        condition, inst_if = t[1], t[2]
+        print(inst_if)
         
         if(len(t) == 3): # if there's not else
             if evalExpr(condition): 
-                evalInst(inst_if)
+                evalInst(('linst', inst_if))
         else:
+            inst_else = t[3]
             if evalExpr(condition):
-                evalInst(inst_if)
+                evalInst(('linst', inst_if))
             else:
-                evalInst(inst_else)   
+                evalInst(('linst', inst_else))  
         
         
     if t[0]=='while':
         while evalExpr(t[1]):  # condition
-            evalInst(t[2])     # instructions
+            evalInst(('linst', t[2]))     # instructions
     
     if t[0]=='for':
         evalInst(t[1])          # assign
         while evalExpr(t[2]):   # condition
-            evalInst(t[3])      # linst
+            evalInst(('linst', t[3]))      # linst
             evalInst(t[4])      # increment
       
     
