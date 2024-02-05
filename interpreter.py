@@ -13,23 +13,15 @@ parser = yacc.yacc()
 
 s = '''
 def main() {
-    a=2;
-    clement=3;
-    
-    if(a==1) {
-        print(1);
-        print(16);
-    }
-    else if(a==0) {
-        print(17);
-    }
-    else if(a==2) {
-        print(2);
-        print(clement);
-    }
-    else {
-        print(15);
-    }
+    clement = 3;
+   for(i=0; i < clement; i++) {
+       print(i);
+   }
+   i=0;
+   while(i<clement) {
+       print(clement);
+       i++;
+   }
 }
 '''
 parser.parse(s)

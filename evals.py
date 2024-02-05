@@ -101,14 +101,14 @@ def evalInst(t):
         
         
     if t[0]=='while':
-        while evalExpr(t[1]):  # condition
-            evalInst(('linst', t[2]))     # instructions
-    
+        while evalExpr(t[1]):                          # condition
+            push_and_execute(g.stack, ('linst', t[2])) # linst
+                
     if t[0]=='for':
-        evalInst(t[1])          # assign
-        while evalExpr(t[2]):   # condition
-            evalInst(('linst', t[3]))      # linst
-            evalInst(t[4])      # increment
+        push_and_execute(g.stack, t[1])      # assign
+        while evalExpr(t[2]):                # condition
+            push_and_execute(g.stack, ('linst', t[4]))  # linst
+            push_and_execute(g.stack, t[3])  # increment
       
     
     if t[0] == 'return':
