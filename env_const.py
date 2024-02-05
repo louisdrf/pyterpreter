@@ -1,3 +1,5 @@
+from evals import *
+
 class Colors:
         def __init__(self):
          self.blue = '\033[94m'
@@ -12,7 +14,7 @@ class Globals:
         self.current_function = ""
         self.current_return_val = None
         self.stack = []
-        
+
         
 globals = Globals()
 colors = Colors()

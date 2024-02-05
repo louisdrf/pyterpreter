@@ -1,6 +1,14 @@
 from env_const import globals as g
 from env_const import colors
 
+    
+def push_and_execute(stack, inst):
+            stack.append(inst)
+            # print(stack)
+            print('evalInst: ', inst)
+            evalInst(inst)
+            stack.pop()
+
 def evalInst(t):
     
     if g.current_return_val and g.current_function:
@@ -22,11 +30,7 @@ def evalInst(t):
         
         while len(g.stack) > 0:
             if i < len(main_linst):
-                g.stack.append(main_linst[i])
-                print('stack ', g.stack)
-                print('evalInst', g.stack[-1])
-                evalInst(g.stack[-1])
-                g.stack.pop()
+                push_and_execute(g.stack, main_linst[i])
                 i+=1
             else:
                 g.stack.pop()
@@ -34,10 +38,10 @@ def evalInst(t):
             
     if t[0] == 'linst':
         for inst in t[1]:
-            evalInst(inst)
+           push_and_execute(g.stack, inst)
+            
         
-             
-                    
+                        
     if t[0]=='print' :
         print(evalExpr(t[1]))
         
@@ -84,17 +88,16 @@ def evalInst(t):
             
     if t[0]=='if' : 
         condition, inst_if = t[1], t[2]
-        print(inst_if)
-        
-        if(len(t) == 3): # if there's not else
-            if evalExpr(condition): 
-                evalInst(('linst', inst_if))
+
+        if evalExpr(condition): 
+            push_and_execute(g.stack, ('linst', inst_if))
         else:
-            inst_else = t[3]
-            if evalExpr(condition):
-                evalInst(('linst', inst_if))
-            else:
-                evalInst(('linst', inst_else))  
+            if(len(t) == 4):
+                inst_else = t[3]
+                if inst_else[0] == 'if':
+                    push_and_execute(g.stack, (inst_else))
+                else:
+                    push_and_execute(g.stack, ('linst', inst_else))
         
         
     if t[0]=='while':
