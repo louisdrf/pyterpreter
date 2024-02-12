@@ -61,6 +61,30 @@ def p_expression_operator_assign(t):
     'operator_assign : NAME operator EQUAL expression'
     t[0] = ('operator_assign', t[1], t[2], t[4])
     
+
+############################ TABLEAUX ###################################
+
+# def p_expression_assign_array(t):
+#     'assign_array : NAME EQUAL new_array'
+#     t[0] = ('assign_array', t[1], t[3])
+
+# def p_expression_array(t):
+#     'new_array : array_values'
+#     t[0] = t[1]
+    
+# def p_expression_array_values(t): 
+#     '''array_values : expression COMMA array_values 
+#                    | expression
+#                    | '''
+    
+#     if len(t) == 1:
+#         t[0] = []
+#     elif len(t) == 2:    
+#         t[0] = [t[1]]
+#     else:
+#         new_value, values_list = t[1], t[3]
+#         values_list.append(new_value)
+#         t[0] = values_list
     
 ############################ ASSIGN ###################################
 
@@ -73,6 +97,7 @@ def p_statement_assign(t):
 def p_expression_assign(t):
     'assign : NAME EQUAL expression'
     t[0] = ('assign', t[1], t[3])
+
 
 
 ############################ BOUCLES ###################################
@@ -127,8 +152,12 @@ def p_expression_operator(t):
 
 def p_statement_return(t):
     '''inst : RETURN expression COLON
-            | RETURN condition COLON'''
-    t[0] = ('return', t[2])
+            | RETURN condition COLON
+            | RETURN COLON'''
+    if len(t) == 3:
+        t[0] = ('return', None)
+    else:
+        t[0] = ('return', t[2])
    
    
 # déclarer plusieurs fonctions
@@ -150,8 +179,7 @@ def p_statement_function(t):
 # appeler une fonction qui retourne une valeur
 def p_statement_call_function_value(t):
     'expression : NAME LPAREN call_params RPAREN'
-    t[0] = ('call_value', t[1], t[3])
-
+    t[0] = ('call_function', t[1], t[3])
 
 # appeler une fonction void
 def p_statement_call_function_void(t):
@@ -159,7 +187,7 @@ def p_statement_call_function_void(t):
     t[0] = ('call', t[1], t[3])
     
     
-def p_expression_call_params(t): # fix bug ex : a ,
+def p_expression_call_params(t): 
     '''call_params : expression COMMA call_params 
                    | expression
                    | '''
@@ -198,6 +226,8 @@ def p_statement_print_string(t):
   
 ############################ EXPRESSIONS ###################################
 
+
+
 def p_expression_bracket_bloc(t):
     'b_bloc : LBRACKET linst RBRACKET'
     t[0] = t[2]
@@ -210,7 +240,7 @@ def p_operator(t):
                 | TIMES
                 | MODULO'''
     t[0] = t[1]
-
+    
 def p_expression_group(t):
     'expression : LPAREN expression RPAREN'
     t[0] = t[2]
@@ -236,7 +266,7 @@ def p_expression_inverse(t):
     t[0] = ('-', t[2])
     
 def p_statement_multiple_assign(t):
-    'inst : params EQUAL multiple_values'
+    'inst : params EQUAL multiple_values COLON'
     t[0] = ('multiple_assign', t[1], t[3])  
   
 def p_expression_multiple_values(t):

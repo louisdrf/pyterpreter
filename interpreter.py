@@ -12,16 +12,17 @@ parser = yacc.yacc()
 
 
 s = '''
+
+def fonction(a) {
+    if(a == 2) {
+        return a;
+    }
+    return 1;
+}
+
 def main() {
-    clement = 3;
-   for(i=0; i < clement; i++) {
-       print(i);
-   }
-   i=0;
-   while(i<clement) {
-       print(clement);
-       i++;
-   }
+    a = fonction(1);
+    print(a);
 }
 '''
 parser.parse(s)
