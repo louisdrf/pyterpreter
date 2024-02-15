@@ -12,17 +12,14 @@ parser = yacc.yacc()
 
 
 s = '''
-
-def fonction(a) {
-    if(a == 2) {
-        return a;
-    }
-    return 1;
+def void mafonction() {
+    return;
 }
 
-def main() {
-    a = fonction(1);
-    print(a);
+
+def void main() {
+    mafonction();
+    mafonction();
 }
 '''
 parser.parse(s)

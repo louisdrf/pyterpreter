@@ -9,7 +9,9 @@ reserved = {
    'sprint'  : 'SPRINT',
    'true'    : 'TRUE',
    'false'   : 'FALSE',
-   'main'    : 'MAIN'
+   'main'    : 'MAIN',
+   'val'     : 'VAL',
+   'void'    : 'VOID'
 }
 
 

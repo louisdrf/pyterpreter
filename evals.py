@@ -4,30 +4,24 @@ from env_const import colors
     
 def push_and_execute(stack, inst):
         stack.append(inst)
-        print('evalInst: ', inst)
+        #print('stack: ', stack)
+        #print('evalInst: ', inst)
         evalInst(inst)
-        print('stack: ', stack)
         
         if inst[0] == 'return':
             return 
         else:
             stack.pop()
+            
         
-
 def empty_function_call(stack, fname):
-    inst = stack.pop()
-    
+    inst = stack.pop() # pop du return
     while(inst[0] != 'call' and inst[1] != fname):
        inst = stack.pop() 
-
-
-
-def empty_linst_call(stack, inst):
-    stack_inst = stack.pop()
     
-    while(stack_inst != inst):
-       inst = stack.pop() 
+    print('apres le clean:   ', stack)
        
+
 
 def evalInst(t):
     
@@ -44,19 +38,18 @@ def evalInst(t):
         g.stack.append('main')
         i = 0
         
-        while len(g.stack) > 0:
-            if i < len(main_linst):
-                push_and_execute(g.stack, main_linst[i])
-                i+=1
-            else:
-                g.stack.pop()
+        while i < len(main_linst):
+            print('avant exécution:', g.stack)
+            push_and_execute(g.stack, main_linst[i])
+            print('après exécution:', g.stack)
+            i+=1
+            
             
             
     if t[0] == 'linst':
         for inst in t[1]:
             push_and_execute(g.stack, inst)
             if g.current_return_val:
-                    empty_linst_call(g.stack, inst)
                     break
                    
     if t[0]=='print' :
@@ -131,28 +124,36 @@ def evalInst(t):
         
     if t[0]=='function':
         g.current_return_val = None
-        function_name, params, instructions = t[1], t[2], t[3]
+        ftype, function_name, params, instructions = t[1], t[2], t[3], t[4]
         
         g.functions[function_name] = {'params': params, 'instructions': instructions}
         
-        for inst in instructions:
-            if inst[0] == 'return' and inst[1]:
-                g.functions[function_name]['return'] = True # expression à retourner
- 
+        if ftype =='val':
+            g.functions[function_name]['return_val'] = True
+        else:
+            g.functions[function_name]['return_val'] = False
+            
         if len(params) > 0: # Si la fonction a des paramètres à déclarer
            for param in params:
                 push_and_execute(g.stack, ('assign', param, 0, function_name))
                 
     
-    if t[0] == 'return' and t[1] != None:
-        g.current_return_val = evalExpr(t[1])       
+    if t[0] == 'return':
+        if t[1] != None:
+            g.current_return_val = evalExpr(t[1])
+        else:
+            g.current_return_val = "none"
         
         
-                         
+                 
     if t[0]=='call':
         g.current_return_val = None
         fname  = t[1]
         params = t[2]
+        return_value = False
+        
+        if len(t) == 4:
+            return_value = t[3]
         
         if fname in g.functions:
             function = g.functions[fname]
@@ -165,9 +166,25 @@ def evalInst(t):
             for inst in function['instructions']:
                 push_and_execute(g.stack, inst)
                 if g.current_return_val:
-                    empty_function_call(g.stack, fname)
-                    break
-                                
+                    if g.current_return_val != "none": # return avec valeur
+                        if return_value == False:
+                            raise ValueError(f"Erreur: La fonction {fname} n'a pas été appelée de la bonne manière.") 
+                        if function['return_val'] == False:
+                            raise ValueError(f"Erreur: La fonction {fname} est une fonction void et ne devrait pas retourner de valeur.") 
+                        else:
+                            empty_function_call(g.stack, fname)
+                            break
+                    elif g.current_return_val == "none": # return sans valeur
+                        if return_value == True:
+                            raise ValueError(f"Erreur: La fonction {fname} n'a pas été appelée de la bonne manière.") 
+                        if function['return_val'] == True:
+                            raise ValueError(f"Erreur: La fonction {fname} est une fonction val et devrait retourner de valeur.") 
+                        else:
+                            print('avant le clean:   ', g.stack)
+                            empty_function_call(g.stack, fname)
+                            break
+            print('apres la fonction:   ', g.stack)    
+               
             g.current_function = ""
             
         else:
@@ -237,12 +254,14 @@ def evalExpr(t):
         
         elif t[0] == 'call_function':
             fname = t[1]
-            if g.functions[fname]['return'] and g.functions[fname]['return'] == True:
-                push_and_execute(g.stack, ('call', fname, t[2]))
-                print('on retourne : ', g.current_return_val)
+            if g.functions[fname]['return_val'] and g.functions[fname]['return_val'] == True:
+                push_and_execute(g.stack, ('call', fname, t[2], True))
+                
+                if g.current_return_val == None:
+                    raise ValueError(f"Erreur: La fonction {fname} ne retourne pas de valeur")
                 return g.current_return_val
             else:
-                raise ValueError(f"Erreur: La fonction {fname} ne retourne aucune valeur")
+                raise ValueError(f"Erreur: La fonction {fname} est void et ne doit donc pas retourner de valeur")
 
         else:
             print(f"Error: Unknown operator '{t[0]}'")

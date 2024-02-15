@@ -31,8 +31,8 @@ def p_linst(t):
 ############################ STACK ET MAIN ###################################
 
 def p_statement_main(t):                
-    'main : FUNCTION MAIN LPAREN RPAREN b_bloc'
-    t[0] = t[5] 
+    'main : FUNCTION VOID MAIN LPAREN RPAREN b_bloc'
+    t[0] = t[6] 
 
 
 
@@ -158,7 +158,11 @@ def p_statement_return(t):
         t[0] = ('return', None)
     else:
         t[0] = ('return', t[2])
-   
+
+def p_expression_ftype(t):
+    '''ftype : VAL
+             | VOID'''
+    t[0] = t[1]
    
 # déclarer plusieurs fonctions
 def p_statements_prototypes(t):
@@ -173,8 +177,8 @@ def p_statements_prototypes(t):
     
 # déclarer une fonction 
 def p_statement_function(t):                
-    'function : FUNCTION NAME LPAREN params RPAREN b_bloc'
-    t[0] = ('function', t[2], t[4], t[6]) 
+    'function : FUNCTION ftype NAME LPAREN params RPAREN b_bloc'
+    t[0] = ('function', t[2], t[3], t[5], t[7]) 
     
 # appeler une fonction qui retourne une valeur
 def p_statement_call_function_value(t):
