@@ -12,14 +12,25 @@ parser = yacc.yacc()
 
 
 s = '''
-def void mafonction() {
-    return;
+def val lagourmande(b) {
+    return 5*b;
 }
 
+def val lafameuse(a,b) {
+    return a*b;
+}
+
+def void unefonction(a,b) {
+    print(a*b);
+    print(a-b);
+    return;
+    print(121);
+}
 
 def void main() {
-    mafonction();
-    mafonction();
+    a = lagourmande(lafameuse(1, 2));
+    print(a);
+    unefonction(10,20);
 }
 '''
 parser.parse(s)

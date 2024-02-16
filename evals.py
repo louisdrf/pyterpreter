@@ -4,23 +4,30 @@ from env_const import colors
     
 def push_and_execute(stack, inst):
         stack.append(inst)
-        #print('stack: ', stack)
-        #print('evalInst: ', inst)
+        print('stack: ', stack)
+        print('evalInst: ', inst)
         evalInst(inst)
         
         if inst[0] == 'return':
             return 
         else:
-            stack.pop()
+            if stack[-1] != 'main':
+                stack.pop()
             
         
 def empty_function_call(stack, fname):
+    nbInstToPop = 0
     inst = stack.pop() # pop du return
-    while(inst[0] != 'call' and inst[1] != fname):
-       inst = stack.pop() 
-    
-    print('apres le clean:   ', stack)
-       
+    for inst in stack:
+        if inst[0] != 'call' and inst[1] != fname:
+            nbInstToPop+=1
+        else:
+            break
+        
+    if nbInstToPop != len(stack):
+        for _ in range(nbInstToPop):
+            stack.pop()
+           
 
 
 def evalInst(t):
@@ -39,11 +46,10 @@ def evalInst(t):
         i = 0
         
         while i < len(main_linst):
-            print('avant exécution:', g.stack)
             push_and_execute(g.stack, main_linst[i])
-            print('après exécution:', g.stack)
             i+=1
-            
+        
+        g.stack.pop()
             
             
     if t[0] == 'linst':
@@ -180,10 +186,8 @@ def evalInst(t):
                         if function['return_val'] == True:
                             raise ValueError(f"Erreur: La fonction {fname} est une fonction val et devrait retourner de valeur.") 
                         else:
-                            print('avant le clean:   ', g.stack)
                             empty_function_call(g.stack, fname)
                             break
-            print('apres la fonction:   ', g.stack)    
                
             g.current_function = ""
             
