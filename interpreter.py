@@ -14,10 +14,9 @@ parser = yacc.yacc()
 s = '''
 
 def void main() {
-    a = [1,2,3];
-    z = 2;
-    b = a[z];
-    print(b);
+    a = [1];
+    a.pop();
+    print(a);
 }
 '''
 parser.parse(s)

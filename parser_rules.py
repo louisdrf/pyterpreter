@@ -101,9 +101,16 @@ def p_expression_get_array_cell(t):
 
 def p_expression_get_array_length(t):
     'expression : LENGTH LPAREN NAME RPAREN'
-    t[0] = ('get_array_length', t[3])               
-
+    t[0] = ('get_array_length', t[3])     
     
+
+def p_statement_push_in_array(t):
+    'inst : NAME DOT PUSH LPAREN expression RPAREN COLON' 
+    t[0] = ('push', t[1], t[5])         
+
+def p_statement_push_in_array(t):
+    'inst : NAME DOT POP LPAREN RPAREN COLON' 
+    t[0] = ('pop', t[1])    
 ############################ ASSIGN ###################################
 
 # statements

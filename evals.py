@@ -209,6 +209,26 @@ def evalInst(t):
              g.names[(variable, scope)] = array_values_evaluated
             
          print(g.names)
+         
+    if t[0] == 'push':
+        array_name, expression = t[1], t[2]
+        value_to_push = evalExpr(expression)
+        array = evalExpr(array_name)
+        if isinstance(array, list):
+                array.append(value_to_push)
+        else:
+            raise ValueError(f"Erreur: la variable {array_name} n'est pas un tableau")
+        
+    if t[0] == 'pop':
+        array_name = t[1]
+        array = evalExpr(array_name)
+        if isinstance(array, list):
+            if len(array) > 0:
+                array.pop()
+            else:
+                raise ValueError(f"Erreur: impossible de pop sur un tableau vide")
+        else:
+            raise ValueError(f"Erreur: la variable {array_name} n'est pas un tableau")
             
                     
 

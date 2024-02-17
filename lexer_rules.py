@@ -12,14 +12,16 @@ reserved = {
    'main'    : 'MAIN',
    'val'     : 'VAL',
    'void'    : 'VOID',
-   'len'     : 'LENGTH'
+   'len'     : 'LENGTH',
+   'push'    : 'PUSH',
+   'pop'     : 'POP'
 }
 
 
 tokens = [
     'NAME','NUMBER','STRING',
     'PLUS','MINUS','TIMES','DIVIDE', 'MODULO',
-    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'LHOOK', 'RHOOK', 'COLON', 'COMMA',
+    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'LHOOK', 'RHOOK', 'COLON', 'COMMA', 'DOT',
     'AND', 'OR', 'EQUAL', 'EQUALS', 'LOWER','HIGHER', 'HIGHEQUAL', 'LOWEQUAL',
     ] + list(reserved.values())
 
@@ -39,6 +41,7 @@ t_LHOOK     = r'\['
 t_RHOOK     = r'\]'
 t_COLON     = r';'
 t_COMMA     = r','
+t_DOT       = r'.'
 t_AND       = r'\&'
 t_OR        = r'\|'
 t_EQUALS    = r'=='
