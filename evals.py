@@ -277,8 +277,16 @@ def evalExpr(t):
                 else:
                     raise ValueError(f"Erreur: impossible d'accéder à cet index pour le tableau")
             else:
-                raise ValueError(f"Erreur: la variable {array} n'est pas un tableau")
+                raise ValueError(f"Erreur: la variable {array_name} n'est pas un tableau")
 
+        elif t[0] == 'get_array_length':
+            array_name = t[1]
+            array = evalExpr(array_name)
+            if isinstance(array, list):
+                    return len(array)
+            else:
+                raise ValueError(f"Erreur: la variable {array_name} n'est pas un tableau")
+            
         else:
             print(f"Error: Unknown operator '{t[0]}'")
             return None
