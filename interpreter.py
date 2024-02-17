@@ -12,25 +12,12 @@ parser = yacc.yacc()
 
 
 s = '''
-def val lagourmande(b) {
-    return 5*b;
-}
-
-def val lafameuse(a,b) {
-    return a*b;
-}
-
-def void unefonction(a,b) {
-    print(a*b);
-    print(a-b);
-    return;
-    print(121);
-}
 
 def void main() {
-    a = lagourmande(lafameuse(1, 2));
-    print(a);
-    unefonction(10,20);
+    a = [1,2,3];
+    z = 2;
+    b = a[z];
+    print(b);
 }
 '''
 parser.parse(s)

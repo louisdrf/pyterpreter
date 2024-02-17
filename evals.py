@@ -56,7 +56,7 @@ def evalInst(t):
         for inst in t[1]:
             push_and_execute(g.stack, inst)
             if g.current_return_val:
-                    break
+                break
                    
     if t[0]=='print' :
         print(evalExpr(t[1]))
@@ -195,21 +195,22 @@ def evalInst(t):
             raise ValueError(f"Erreur: La fonction {fname} n'a pas été déclarée") 
    
    
-    # if t[0] == 'assign_array':
-    #     variable, array_values = t[1], t[2]
-    #     array_values_evaluated = []
+    if t[0] == 'assign_array':
+         variable, array_values = t[1], t[2]
+         array_values_evaluated = []
         
-    #     for expression in array_values:
-    #         array_values_evaluated.append(evalExpr(expression))
+         for expression in reversed(array_values):
+             array_values_evaluated.append(evalExpr(expression))
          
-    #     if len(t) > 3:
-    #        g.names[(variable, t[3])] = array_values_evaluated # déclaration de paramètre dans une fonction 
-    #     else:
-    #         scope = g.current_function if (variable, g.current_function) in g.names or g.current_function else "global"
-    #         g.names[(variable, scope)] = array_values_evaluated
+         if len(t) > 3:
+            g.names[(variable, t[3])] = array_values_evaluated # déclaration de paramètre dans une fonction 
+         else:
+             scope = g.current_function if (variable, g.current_function) in g.names or g.current_function else "global"
+             g.names[(variable, scope)] = array_values_evaluated
             
-    #     print(g.names)
+         print(g.names)
             
+                    
 
 def evalExpr(t):
     print('evalExpr', t)
@@ -266,6 +267,17 @@ def evalExpr(t):
                 return g.current_return_val
             else:
                 raise ValueError(f"Erreur: La fonction {fname} est void et ne doit donc pas retourner de valeur")
+        
+        elif t[0] == 'get_array_cell':
+            array_name, index = t[1], evalExpr(t[2])
+            array = evalExpr(array_name)
+            if isinstance(array, list):
+                if index >= 0 and index < len(array):
+                    return array[index]
+                else:
+                    raise ValueError(f"Erreur: impossible d'accéder à cet index pour le tableau")
+            else:
+                raise ValueError(f"Erreur: la variable {array} n'est pas un tableau")
 
         else:
             print(f"Error: Unknown operator '{t[0]}'")

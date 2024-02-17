@@ -64,27 +64,45 @@ def p_expression_operator_assign(t):
 
 ############################ TABLEAUX ###################################
 
-# def p_expression_assign_array(t):
-#     'assign_array : NAME EQUAL new_array'
-#     t[0] = ('assign_array', t[1], t[3])
+def p_statement_assign_array(t):
+    'inst : assign_array COLON'
+    t[0] = t[1]
+    
+def p_expression_assign_array(t):
+     'assign_array : NAME EQUAL new_array'
+     t[0] = ('assign_array', t[1], t[3])
 
-# def p_expression_array(t):
-#     'new_array : array_values'
-#     t[0] = t[1]
+def p_expression_array(t):
+     'new_array : LHOOK array_values RHOOK'
+     t[0] = t[2]
     
-# def p_expression_array_values(t): 
-#     '''array_values : expression COMMA array_values 
-#                    | expression
-#                    | '''
-    
-#     if len(t) == 1:
-#         t[0] = []
-#     elif len(t) == 2:    
-#         t[0] = [t[1]]
-#     else:
-#         new_value, values_list = t[1], t[3]
-#         values_list.append(new_value)
-#         t[0] = values_list
+def p_expression_array_values(t): 
+     '''array_values : expression COMMA array_values 
+                    | expression
+                    | '''
+     if len(t) == 1:
+         t[0] = []
+     elif len(t) == 2:    
+         t[0] = [t[1]]
+     else:
+         new_value, values_list = t[1], t[3]
+         values_list.append(new_value)
+         t[0] = values_list
+         
+         
+         
+############################ FONCTIONS SUR LES TABLEAUX ###################################
+
+
+def p_expression_get_array_cell(t):
+    'expression : NAME LHOOK expression RHOOK'
+    t[0] = ('get_array_cell', t[1], t[3])
+   
+
+def p_expression_get_array_length(t):
+    'expression : LENGTH LPAREN NAME RPAREN'
+    t[0] = ('get_array_length', t[3])               
+
     
 ############################ ASSIGN ###################################
 
