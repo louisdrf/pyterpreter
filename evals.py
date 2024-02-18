@@ -229,14 +229,39 @@ def evalInst(t):
                 raise ValueError(f"Erreur: impossible de pop sur un tableau vide")
         else:
             raise ValueError(f"Erreur: la variable {array_name} n'est pas un tableau")
-            
+    
+    if t[0] == 'insert':
+        array, index, value = evalExpr(t[1]), evalExpr(t[2]), evalExpr(t[3])
+        if isinstance(array, list):
+            if index >= 0 and index < len(array):
+                array.insert(index, value)
+            else:
+                raise ValueError(f"Erreur: impossible d'accéder à cet index pour le tableau")
+        else:
+            raise ValueError(f"Erreur: la variable {array} n'est pas un tableau")
+        
+    if t[0] == 'concat':
+        array1, array2 = evalExpr(t[1]), evalExpr(t[2])      
+        if isinstance(array1, list) and isinstance(array2, list):
+            array1 += array2
+        else:
+            raise ValueError(f"Erreur: Impossible de concaténer deux éléments qui ne sont pas des tableaux")
+        
+    if t[0] == 'merge_and_sort':
+        array1, array2 = evalExpr(t[1]), evalExpr(t[2])      
+        if isinstance(array1, list) and isinstance(array2, list):
+            array1 += array2
+            array1 = sorted(array1)
+        else:
+            raise ValueError(f"Erreur: Impossible de fusionner deux éléments qui ne sont pas des tableaux")
+        
                     
 
 def evalExpr(t):
     print('evalExpr', t)
     if type(t) == bool:
         return t
-    if type(t) == int:
+    if type(t) == int or type(t) == list:
         return t  
     elif type(t) == str:
         if (t, g.current_function) in g.names: # On vérifie si une variable locale existe

@@ -75,6 +75,7 @@ def p_expression_assign_array(t):
 def p_expression_array(t):
      'new_array : LHOOK array_values RHOOK'
      t[0] = t[2]
+     
     
 def p_expression_array_values(t): 
      '''array_values : expression COMMA array_values 
@@ -108,9 +109,23 @@ def p_statement_push_in_array(t):
     'inst : NAME DOT PUSH LPAREN expression RPAREN COLON' 
     t[0] = ('push', t[1], t[5])         
 
-def p_statement_push_in_array(t):
+def p_statement_pop_in_array(t):
     'inst : NAME DOT POP LPAREN RPAREN COLON' 
     t[0] = ('pop', t[1])    
+    
+def p_statement_insert_in_array(t):
+    'inst : NAME DOT INSERT LPAREN expression COMMA expression RPAREN COLON'
+    t[0] = ('insert', t[1], t[5], t[7])
+    
+
+def p_statement_concat_arrays(t):
+    'inst : NAME DOT CONCAT LPAREN NAME RPAREN COLON'
+    t[0] = ('concat', t[1], t[5])
+    
+def p_statement_merge_and_sort_arrays(t):
+    'inst : MERGE_AND_SORT LPAREN NAME COMMA NAME RPAREN COLON'
+    t[0] == ('merge_and_sort', t[3], t[5])
+    
 ############################ ASSIGN ###################################
 
 # statements
@@ -178,6 +193,7 @@ def p_expression_operator(t):
 def p_statement_return(t):
     '''inst : RETURN expression COLON
             | RETURN condition COLON
+            | RETURN new_array COLON
             | RETURN COLON'''
     if len(t) == 3:
         t[0] = ('return', None)

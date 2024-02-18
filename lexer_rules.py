@@ -14,7 +14,10 @@ reserved = {
    'void'    : 'VOID',
    'len'     : 'LENGTH',
    'push'    : 'PUSH',
-   'pop'     : 'POP'
+   'pop'     : 'POP',
+   'insert'  : 'INSERT',
+   'concat'  : 'CONCAT',
+   'merge_and_sort': 'MERGE_AND_SORT'
 }
 
 

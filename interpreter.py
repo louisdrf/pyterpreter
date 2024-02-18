@@ -13,9 +13,16 @@ parser = yacc.yacc()
 
 s = '''
 
+def val mafonction() {
+    return [1,2,3];
+}
+
+def val get_tab() {
+    return mafonction();
+}
+
 def void main() {
-    a = [1];
-    a.pop();
+    a = get_tab();
     print(a);
 }
 '''
