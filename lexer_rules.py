@@ -17,7 +17,7 @@ reserved = {
    'pop'     : 'POP',
    'insert'  : 'INSERT',
    'concat'  : 'CONCAT',
-   'merge_and_sort': 'MERGE_AND_SORT'
+   'merge_sort': 'MERGE_AND_SORT'
 }
 
 
