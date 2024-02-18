@@ -13,16 +13,11 @@ parser = yacc.yacc()
 
 s = '''
 
-def val mafonction() {
-    return [1,2,3];
-}
-
-def val get_tab() {
-    return mafonction();
-}
 
 def void main() {
-    a = get_tab();
+    a = [1,2,3];
+    b = [2,4,1];
+    merge_and_sort(a,b);
     print(a);
 }
 '''

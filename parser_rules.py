@@ -77,18 +77,18 @@ def p_expression_array(t):
      t[0] = t[2]
      
     
-def p_expression_array_values(t): 
-     '''array_values : expression COMMA array_values 
+def p_expression_array_values(t):
+    '''array_values : expression COMMA array_values
                     | expression
                     | '''
-     if len(t) == 1:
-         t[0] = []
-     elif len(t) == 2:    
-         t[0] = [t[1]]
-     else:
-         new_value, values_list = t[1], t[3]
-         values_list.append(new_value)
-         t[0] = values_list
+    if len(t) == 1:
+        t[0] = []
+    elif len(t) == 2:
+        t[0] = [t[1]]
+    else:
+        new_value, values_list = t[1], t[3]
+        values_list.insert(0, new_value)  
+        t[0] = values_list
          
          
          
@@ -101,7 +101,8 @@ def p_expression_get_array_cell(t):
    
 
 def p_expression_get_array_length(t):
-    'expression : LENGTH LPAREN NAME RPAREN'
+    '''expression : LENGTH LPAREN NAME RPAREN
+                  | LENGTH LPAREN new_array RPAREN'''
     t[0] = ('get_array_length', t[3])     
     
 
@@ -119,12 +120,13 @@ def p_statement_insert_in_array(t):
     
 
 def p_statement_concat_arrays(t):
-    'inst : NAME DOT CONCAT LPAREN NAME RPAREN COLON'
+    '''inst : NAME DOT CONCAT LPAREN NAME RPAREN COLON
+            | NAME DOT CONCAT LPAREN new_array RPAREN COLON'''
     t[0] = ('concat', t[1], t[5])
     
 def p_statement_merge_and_sort_arrays(t):
     'inst : MERGE_AND_SORT LPAREN NAME COMMA NAME RPAREN COLON'
-    t[0] == ('merge_and_sort', t[3], t[5])
+    t[0] = ('merge_and_sort', t[3], t[5])
     
 ############################ ASSIGN ###################################
 

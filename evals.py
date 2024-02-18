@@ -199,7 +199,7 @@ def evalInst(t):
          variable, array_values = t[1], t[2]
          array_values_evaluated = []
         
-         for expression in reversed(array_values):
+         for expression in array_values:
              array_values_evaluated.append(evalExpr(expression))
          
          if len(t) > 3:
@@ -208,7 +208,6 @@ def evalInst(t):
              scope = g.current_function if (variable, g.current_function) in g.names or g.current_function else "global"
              g.names[(variable, scope)] = array_values_evaluated
             
-         print(g.names)
          
     if t[0] == 'push':
         array_name, expression = t[1], t[2]
@@ -251,7 +250,7 @@ def evalInst(t):
         array1, array2 = evalExpr(t[1]), evalExpr(t[2])      
         if isinstance(array1, list) and isinstance(array2, list):
             array1 += array2
-            array1 = sorted(array1)
+            array1 = array1.sort()
         else:
             raise ValueError(f"Erreur: Impossible de fusionner deux éléments qui ne sont pas des tableaux")
         
